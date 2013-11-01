@@ -1,0 +1,46 @@
+{\rtf1\ansi\ansicpg936\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\fnil\fcharset134 STHeitiSC-Light;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 \'d2\'d4\'cf\'c2\'ca\'fd\'be\'dd\'ce\'aa\'a3\'ac1W\'b4\'cePOST\'ca\'fd\'be\'dd\'b5\'bd\'b7\'fe\'ce\'f1\'c6\'f7PHP\'d2\'b3\'c3\'e6\'a3\'ac\
+ab -n 10000 -c 300 http://127.0.0.1/test.php\
+6940req/s \
+\
+\
+python socket\'c1\'ac\'bd\'d3\'a3\'ac\'b5\'a5\'bd\'f8\'b3\'cc 3000+ \'ce\'e5\'bd\'f8\'b3\'cc 5000-
+\f1 \
+root@debian:/home/l# python socketest.py\
+0:00:03.418765\
+0:00:03.401221\
+0:00:03.464503\
+\
+
+\f0 p
+\f1 ython curl
+\f0 \'c1\'ac\'bd\'d3 \'b5\'a5\'bd\'f8\'b3\'cc 3000+ \'ce\'e5\'bd\'f8\'b3\'cc 6000+
+\f1 \
+root@debian:/home/l# python curl.py\
+0:00:02.996340\
+0:00:03.019482\
+0:00:03.201633\
+\
+
+\f0 php
+\f1  curl
+\f0 \'c1\'ac\'bd\'d3 \'b5\'a5\'bd\'f8\'b3\'cc 3000+ \'ce\'e5\'bd\'f8\'b3\'cc 6000+
+\f1 \
+root@debian:/home/l# php test.php\
+2.9323410987854\
+2.9500408172607\
+3.1015400886536\
+\
+\
+
+\f0 python urllib2\'c1\'ac\'bd\'d3 
+\f1 \
+root@debian:/home/l# python test.py\
+0:00:09.356074\
+0:00:09.690012\
+0:00:10.579858}

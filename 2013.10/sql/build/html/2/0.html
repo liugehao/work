@@ -1,0 +1,125 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>索引使用 &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="../index.html" />
+    <link rel="next" title="一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)" href="1.html" />
+    <link rel="prev" title="事务相关记录保留时间戳，建议只增不改；在必须对记录进行修改的时候，保留更改时间戳" href="../1/10.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="1.html" title="一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../1/10.html" title="事务相关记录保留时间戳，建议只增不改；在必须对记录进行修改的时候，保留更改时间戳"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>索引使用<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1.html">一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.html">每个表索引越少越好</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3.html">每个查询必须用到索引</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4.html">建立组合索引时，WHERE 条件中用到等于的字段放前边，用到范围的字段放后边</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5.html">删除重复字段的索引，减少dml IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6.html">除了主键外，避免建立其他唯一性索引</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7.html">索引中重复的记录数越少，效率越高，效率最高的是主键</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8.html">索引字段最好不要存在 NULL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="9.html">组合索引可以只使用第一个，或者前两个，或者前几个</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../1/10.html"
+                        title="previous chapter">事务相关记录保留时间戳，建议只增不改；在必须对记录进行修改的时候，保留更改时间戳</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="1.html"
+                        title="next chapter">一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/2/0.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="1.html" title="一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../1/10.html" title="事务相关记录保留时间戳，建议只增不改；在必须对记录进行修改的时候，保留更改时间戳"
+             >previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

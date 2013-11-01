@@ -1,0 +1,43 @@
+禁止字段格式转换
+=============================
+
+禁止字段格式转换，如 SELECT * FROM GS WHERE BM=200000，数值两边不要加引号
+
+大多数字段使用函数不会使用索引，只有形如left(BM)='200000'等可以使用)
+
+查询条件和字段类型不一致，没有用到索引：
+
+var1列参考 :ref:`var1`
+
+.. code-block:: mysql
+
+    EXPLAIN EXTENDED
+    SELECT 
+      emp_no,
+      birth_date,
+      first_name,
+      last_name,
+      gender hire_date 
+    FROM
+      employees 
+    WHERE var1=100001
+
+.. image:: ../../images/4-3.png
+
+查询条件和字段类型不一致，用到索引：
+
+.. code-block:: mysql
+
+    EXPLAIN EXTENDED
+    SELECT 
+      emp_no,
+      birth_date,
+      first_name,
+      last_name,
+      gender hire_date 
+    FROM
+      employees 
+    WHERE var1='100001'
+
+.. image:: ../../images/4-4.png
+

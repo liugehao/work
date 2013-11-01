@@ -1,0 +1,14 @@
+使用type=heap的临时表
+======================================
+
+使用 ENGINE = MEMORY建立内存表，（type=heap 我用的mysql 5.6不支持）
+关机后数据会全部丢失，表结构不变。
+
+.. code-block:: mysql
+
+    CREATE TABLE `test2` (
+      `id` INT(11) NOT NULL,
+      `count` INT(11) DEFAULT NULL,
+      `db_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      PRIMARY KEY (`id`)
+    ) ENGINE = MEMORY DEFAULT CHARSET=latin1

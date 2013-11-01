@@ -1,0 +1,123 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>字符变量使用单引号，不要使用双引号 &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="../index.html" />
+    <link rel="up" title="存储过程" href="0.html" />
+    <link rel="next" title="存储过程要能够重复执行，执行时需要清空历史冲突记录" href="4.html" />
+    <link rel="prev" title="在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试" href="2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="4.html" title="存储过程要能够重复执行，执行时需要清空历史冲突记录"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="2.html" title="在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" accesskey="U">存储过程</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>字符变量使用单引号，不要使用双引号<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>字符变量使用单引号，不要使用双引号，【&#8221;2012-09-23 00:00:00&#8221;】 可改为 【&#8216;2012-09-23 00:00:00&#8217;】</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">SELECT</span> <span class="n">emp_no</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">hire_date</span> <span class="k">FROM</span> <span class="ss">`employees`</span> <span class="k">WHERE</span> <span class="n">hire_date</span><span class="o">=</span><span class="s2">&quot;1986-06-26&quot;</span>
+</pre></div>
+</div>
+<p>用单引号写成：</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">SELECT</span> <span class="n">emp_no</span><span class="p">,</span> <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">hire_date</span> <span class="k">FROM</span> <span class="ss">`employees`</span> <span class="k">WHERE</span> <span class="n">hire_date</span><span class="o">=</span><span class="s1">&#39;1986-06-26&#39;</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="2.html"
+                        title="previous chapter">在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="4.html"
+                        title="next chapter">存储过程要能够重复执行，执行时需要清空历史冲突记录</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/4/3.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="4.html" title="存储过程要能够重复执行，执行时需要清空历史冲突记录"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="2.html" title="在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试"
+             >previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" >存储过程</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

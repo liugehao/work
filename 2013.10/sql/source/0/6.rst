@@ -1,0 +1,33 @@
+每个查询结果集使用的内存量不要超过256M，可以通过时间范围控制，如 RK BETWEEN A AND B，建议大表按可小时操作
+=======================================================================================================================================
+
+
+.. code-block:: mysql
+
+    SELECT
+      `emp_no`,
+      `birth_date`,
+      `first_name`,
+      `last_name`,
+      `gender`,
+      `hire_date`
+    FROM `employees`.`employees`
+    
+    
+
+改写为：
+
+
+.. code-block:: mysql
+
+    SELECT 
+      `emp_no`,
+      `birth_date`,
+      `first_name`,
+      `last_name`,
+      `gender`,
+      `hire_date` 
+    FROM
+      `employees`.`employees` 
+    WHERE birth_date BETWEEN '1989-01-01 00:00:00' 
+      AND '1990-01-01 00:00:00' 

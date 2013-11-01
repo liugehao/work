@@ -1,0 +1,150 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>innodb引擎,在过程结尾提交，避免过度commit &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="../index.html" />
+    <link rel="up" title="引擎使用" href="0.html" />
+    <link rel="next" title="权限控制" href="../9/0.html" />
+    <link rel="prev" title="引擎使用" href="0.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../9/0.html" title="权限控制"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="0.html" title="引擎使用"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" accesskey="U">引擎使用</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="innodb-commit">
+<h1>innodb引擎,在过程结尾提交，避免过度commit<a class="headerlink" href="#innodb-commit" title="Permalink to this headline">¶</a></h1>
+<p>innodb引擎,在过程结尾提交，避免过度commit</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$conn</span> <span class="o">=</span> <span class="nb">mysql_connect</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span><span class="s1">&#39;root&#39;</span><span class="p">,</span><span class="s1">&#39;root&#39;</span><span class="p">)</span> <span class="k">or</span> <span class="k">die</span> <span class="p">(</span><span class="s2">&quot;数据连接错误!!!&quot;</span><span class="p">);</span>
+<span class="nb">mysql_select_db</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span><span class="nv">$conn</span><span class="p">);</span>
+<span class="nb">mysql_query</span><span class="p">(</span><span class="s2">&quot;set names &#39;GBK&#39;&quot;</span><span class="p">);</span> <span class="c1">//使用GBK中文编码;</span>
+<span class="c1">//开始一个事务</span>
+<span class="nb">mysql_query</span><span class="p">(</span><span class="s2">&quot;BEGIN&quot;</span><span class="p">);</span> <span class="c1">//或者mysql_query(&quot;START TRANSACTION&quot;);</span>
+<span class="nv">$sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO `employees`.`employees` (</span>
+<span class="s2">  `emp_no`,</span>
+<span class="s2">  `birth_date`,</span>
+<span class="s2">  `first_name`,</span>
+<span class="s2">  `last_name`,</span>
+<span class="s2">  `hire_date`,</span>
+<span class="s2">)</span>
+<span class="s2">VALUES</span>
+<span class="s2">  (</span>
+<span class="s2">    99999,</span>
+<span class="s2">    &#39;1989-01-01,</span>
+<span class="s2">    &#39;first_name&#39;,</span>
+<span class="s2">    &#39;last_name&#39;,</span>
+<span class="s2">     &#39;1989-01-01&#39;</span>
+<span class="s2">  ) ;&quot;</span><span class="p">;</span>
+<span class="nv">$sql2</span> <span class="o">=</span> <span class="s2">&quot;delete from employees where emp_no= -1&quot;</span><span class="p">;</span><span class="c1">//这条我故意写错</span>
+<span class="nv">$res</span> <span class="o">=</span> <span class="nb">mysql_query</span><span class="p">(</span><span class="nv">$sql</span><span class="p">);</span>
+<span class="nv">$res1</span> <span class="o">=</span> <span class="nb">mysql_query</span><span class="p">(</span><span class="nv">$sql2</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="nv">$res</span> <span class="o">&amp;&amp;</span> <span class="nv">$res1</span><span class="p">){</span>
+<span class="nb">mysql_query</span><span class="p">(</span><span class="s2">&quot;COMMIT&quot;</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s1">&#39;提交成功。&#39;</span><span class="p">;</span>
+<span class="p">}</span><span class="k">else</span><span class="p">{</span>
+<span class="nb">mysql_query</span><span class="p">(</span><span class="s2">&quot;ROLLBACK&quot;</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s1">&#39;数据回滚。&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nb">mysql_query</span><span class="p">(</span><span class="s2">&quot;END&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="0.html"
+                        title="previous chapter">引擎使用</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../9/0.html"
+                        title="next chapter">权限控制</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/8/1.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../9/0.html" title="权限控制"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="0.html" title="引擎使用"
+             >previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" >引擎使用</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

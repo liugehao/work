@@ -1,0 +1,226 @@
+\relax 
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand*\HyPL@Entry[1]{}
+\HyPL@Entry{0<</S/r>>}
+\select@language{english}
+\@writefile{toc}{\select@language{english}}
+\@writefile{lof}{\select@language{english}}
+\@writefile{lot}{\select@language{english}}
+\HyPL@Entry{2<</S/r>>}
+\HyPL@Entry{4<</S/D>>}
+\newlabel{index::doc}{{}{1}{\relax }{section*.2}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}设计原则}{1}{chapter.1}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{0/0:welcome-to-sql-s-documentation}{{1}{1}{设计原则\relax }{chapter.1}{}}
+\newlabel{0/0::doc}{{1}{1}{设计原则\relax }{chapter.1}{}}
+\newlabel{0/0:id1}{{1}{1}{设计原则\relax }{chapter.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}任何语句使用前explain看执行计划是否用到索引}{1}{section.1.1}}
+\newlabel{0/1:explain}{{1.1}{1}{任何语句使用前explain看执行计划是否用到索引\relax }{section.1.1}{}}
+\newlabel{0/1::doc}{{1.1}{1}{任何语句使用前explain看执行计划是否用到索引\relax }{section.1.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}不要从明细表查统计结果，定期统计插入到汇总表}{1}{section.1.2}}
+\newlabel{0/2::doc}{{1.2}{1}{不要从明细表查统计结果，定期统计插入到汇总表\relax }{section.1.2}{}}
+\newlabel{0/2:id1}{{1.2}{1}{不要从明细表查统计结果，定期统计插入到汇总表\relax }{section.1.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}一般做法}{1}{subsection.1.2.1}}
+\newlabel{0/2:id2}{{1.2.1}{1}{一般做法\relax }{subsection.1.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}使用汇总表}{2}{subsection.1.2.2}}
+\newlabel{0/2:id3}{{1.2.2}{2}{使用汇总表\relax }{subsection.1.2.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表}{2}{section.1.3}}
+\newlabel{0/3:select-insert-table}{{1.3}{2}{禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表\relax }{section.1.3}{}}
+\newlabel{0/3::doc}{{1.3}{2}{禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表\relax }{section.1.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}明细统计时，只统计编码，不要关联名称等冗余字段}{3}{section.1.4}}
+\newlabel{0/4::doc}{{1.4}{3}{明细统计时，只统计编码，不要关联名称等冗余字段\relax }{section.1.4}{}}
+\newlabel{0/4:id1}{{1.4}{3}{明细统计时，只统计编码，不要关联名称等冗余字段\relax }{section.1.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.5}明细统计时，只统计编码，不要关联名称等冗余字段}{3}{section.1.5}}
+\newlabel{0/5::doc}{{1.5}{3}{明细统计时，只统计编码，不要关联名称等冗余字段\relax }{section.1.5}{}}
+\newlabel{0/5:id1}{{1.5}{3}{明细统计时，只统计编码，不要关联名称等冗余字段\relax }{section.1.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.6}每个查询结果集使用的内存量不要超过256M，可以通过时间范围控制，如 RK BETWEEN A AND B，建议大表按可小时操作}{4}{section.1.6}}
+\newlabel{0/6::doc}{{1.6}{4}{每个查询结果集使用的内存量不要超过256M，可以通过时间范围控制，如 RK BETWEEN A AND B，建议大表按可小时操作\relax }{section.1.6}{}}
+\newlabel{0/6:m-rk-between-a-and-b}{{1.6}{4}{每个查询结果集使用的内存量不要超过256M，可以通过时间范围控制，如 RK BETWEEN A AND B，建议大表按可小时操作\relax }{section.1.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.7}页面查询在10秒内要返回结果}{5}{section.1.7}}
+\newlabel{0/7::doc}{{1.7}{5}{页面查询在10秒内要返回结果\relax }{section.1.7}{}}
+\newlabel{0/7:id1}{{1.7}{5}{页面查询在10秒内要返回结果\relax }{section.1.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.8}联合查询时，每个表必须加别名以提高SQL解析效率}{5}{section.1.8}}
+\newlabel{0/8::doc}{{1.8}{5}{联合查询时，每个表必须加别名以提高SQL解析效率\relax }{section.1.8}{}}
+\newlabel{0/8:sql}{{1.8}{5}{联合查询时，每个表必须加别名以提高SQL解析效率\relax }{section.1.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.9}语句中避免使用 GROUP BY, 可通过批量程序定期汇总}{5}{section.1.9}}
+\newlabel{0/9:group-by}{{1.9}{5}{语句中避免使用 GROUP BY, 可通过批量程序定期汇总\relax }{section.1.9}{}}
+\newlabel{0/9::doc}{{1.9}{5}{语句中避免使用 GROUP BY, 可通过批量程序定期汇总\relax }{section.1.9}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}字段设计}{7}{chapter.2}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{1/0::doc}{{2}{7}{字段设计\relax }{chapter.2}{}}
+\newlabel{1/0:id1}{{2}{7}{字段设计\relax }{chapter.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}尽可能使用更小的数据类型，如 TINYINT、smallint,MEDIUMINT、INT、BIGINT (如int(11)的11代表客户端显示宽度，并不是取值范围,tinyint -2\textasciicircum {}8-2\textasciicircum {}8-1,smallint -2\textasciicircum {}15-2\textasciicircum {}15-1 int -2\textasciicircum {}31-2\textasciicircum {}31-1 bigint -2\textasciicircum {}63-2\textasciicircum {}63-1)}{7}{section.2.1}}
+\newlabel{1/1:tinyintsmallint-mediumintintbigint-int-11-11-tinyint-2-8-2-8-1-smallint-2-15-2-15-1-int-2-31-2-31-1-bigint-2-63-2-63-1}{{2.1}{7}{尽可能使用更小的数据类型，如 TINYINT、smallint,MEDIUMINT、INT、BIGINT (如int(11)的11代表客户端显示宽度，并不是取值范围,tinyint -2\textasciicircum {}8-2\textasciicircum {}8-1,smallint -2\textasciicircum {}15-2\textasciicircum {}15-1 int -2\textasciicircum {}31-2\textasciicircum {}31-1 bigint -2\textasciicircum {}63-2\textasciicircum {}63-1)\relax }{section.2.1}{}}
+\newlabel{1/1::doc}{{2.1}{7}{尽可能使用更小的数据类型，如 TINYINT、smallint,MEDIUMINT、INT、BIGINT (如int(11)的11代表客户端显示宽度，并不是取值范围,tinyint -2\textasciicircum {}8-2\textasciicircum {}8-1,smallint -2\textasciicircum {}15-2\textasciicircum {}15-1 int -2\textasciicircum {}31-2\textasciicircum {}31-1 bigint -2\textasciicircum {}63-2\textasciicircum {}63-1)\relax }{section.2.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}尽量少用 TEXT、BLOB 等专有类型 (用链接代替)}{7}{section.2.2}}
+\newlabel{1/2:textblob}{{2.2}{7}{尽量少用 TEXT、BLOB 等专有类型 (用链接代替)\relax }{section.2.2}{}}
+\newlabel{1/2::doc}{{2.2}{7}{尽量少用 TEXT、BLOB 等专有类型 (用链接代替)\relax }{section.2.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}字符型，数值型字段类型不能混合使用，依赖后期转换}{7}{section.2.3}}
+\newlabel{1/3::doc}{{2.3}{7}{字符型，数值型字段类型不能混合使用，依赖后期转换\relax }{section.2.3}{}}
+\newlabel{1/3:id1}{{2.3}{7}{字符型，数值型字段类型不能混合使用，依赖后期转换\relax }{section.2.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}相同字段不同表中的类型和长度要一致}{7}{section.2.4}}
+\newlabel{1/4::doc}{{2.4}{7}{相同字段不同表中的类型和长度要一致\relax }{section.2.4}{}}
+\newlabel{1/4:id1}{{2.4}{7}{相同字段不同表中的类型和长度要一致\relax }{section.2.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}字段名称不能使用关键字}{7}{section.2.5}}
+\newlabel{1/5::doc}{{2.5}{7}{字段名称不能使用关键字\relax }{section.2.5}{}}
+\newlabel{1/5:id1}{{2.5}{7}{字段名称不能使用关键字\relax }{section.2.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}不要指定字段级编码，建议全库统一}{7}{section.2.6}}
+\newlabel{1/6::doc}{{2.6}{7}{不要指定字段级编码，建议全库统一\relax }{section.2.6}{}}
+\newlabel{1/6:id1}{{2.6}{7}{不要指定字段级编码，建议全库统一\relax }{section.2.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.7}默认值要规范，例如日期不要使用 0000-00-00}{8}{section.2.7}}
+\newlabel{1/7::doc}{{2.7}{8}{默认值要规范，例如日期不要使用 0000-00-00\relax }{section.2.7}{}}
+\newlabel{1/7:id1}{{2.7}{8}{默认值要规范，例如日期不要使用 0000-00-00\relax }{section.2.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.8}不要用自增ID做主键}{8}{section.2.8}}
+\newlabel{1/8::doc}{{2.8}{8}{不要用自增ID做主键\relax }{section.2.8}{}}
+\newlabel{1/8:id}{{2.8}{8}{不要用自增ID做主键\relax }{section.2.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.9}不要使用外键}{8}{section.2.9}}
+\newlabel{1/9::doc}{{2.9}{8}{不要使用外键\relax }{section.2.9}{}}
+\newlabel{1/9:id1}{{2.9}{8}{不要使用外键\relax }{section.2.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.10}事务相关记录保留时间戳，建议只增不改；在必须对记录进行修改的时候，保留更改时间戳}{8}{section.2.10}}
+\newlabel{1/10::doc}{{2.10}{8}{事务相关记录保留时间戳，建议只增不改；在必须对记录进行修改的时候，保留更改时间戳\relax }{section.2.10}{}}
+\newlabel{1/10:id1}{{2.10}{8}{事务相关记录保留时间戳，建议只增不改；在必须对记录进行修改的时候，保留更改时间戳\relax }{section.2.10}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}索引使用}{9}{chapter.3}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{2/0::doc}{{3}{9}{索引使用\relax }{chapter.3}{}}
+\newlabel{2/0:id1}{{3}{9}{索引使用\relax }{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)}{9}{section.3.1}}
+\newlabel{2/1:merge-index-a-1-or-b-2-ab-union-all}{{3.1}{9}{一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)\relax }{section.3.1}{}}
+\newlabel{2/1::doc}{{3.1}{9}{一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)\relax }{section.3.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}每个表索引越少越好}{13}{section.3.2}}
+\newlabel{2/2::doc}{{3.2}{13}{每个表索引越少越好\relax }{section.3.2}{}}
+\newlabel{2/2:id1}{{3.2}{13}{每个表索引越少越好\relax }{section.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}每个查询必须用到索引}{13}{section.3.3}}
+\newlabel{2/3::doc}{{3.3}{13}{每个查询必须用到索引\relax }{section.3.3}{}}
+\newlabel{2/3:id1}{{3.3}{13}{每个查询必须用到索引\relax }{section.3.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}建立组合索引时，WHERE 条件中用到等于的字段放前边，用到范围的字段放后边}{13}{section.3.4}}
+\newlabel{2/4:where}{{3.4}{13}{建立组合索引时，WHERE 条件中用到等于的字段放前边，用到范围的字段放后边\relax }{section.3.4}{}}
+\newlabel{2/4::doc}{{3.4}{13}{建立组合索引时，WHERE 条件中用到等于的字段放前边，用到范围的字段放后边\relax }{section.3.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}删除重复字段的索引，减少dml IO}{13}{section.3.5}}
+\newlabel{2/5:dml-io}{{3.5}{13}{删除重复字段的索引，减少dml IO\relax }{section.3.5}{}}
+\newlabel{2/5::doc}{{3.5}{13}{删除重复字段的索引，减少dml IO\relax }{section.3.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.6}除了主键外，避免建立其他唯一性索引}{13}{section.3.6}}
+\newlabel{2/6::doc}{{3.6}{13}{除了主键外，避免建立其他唯一性索引\relax }{section.3.6}{}}
+\newlabel{2/6:id1}{{3.6}{13}{除了主键外，避免建立其他唯一性索引\relax }{section.3.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.7}索引中重复的记录数越少，效率越高，效率最高的是主键}{13}{section.3.7}}
+\newlabel{2/7::doc}{{3.7}{13}{索引中重复的记录数越少，效率越高，效率最高的是主键\relax }{section.3.7}{}}
+\newlabel{2/7:id1}{{3.7}{13}{索引中重复的记录数越少，效率越高，效率最高的是主键\relax }{section.3.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.8}索引字段最好不要存在 NULL}{13}{section.3.8}}
+\newlabel{2/8:null}{{3.8}{13}{索引字段最好不要存在 NULL\relax }{section.3.8}{}}
+\newlabel{2/8::doc}{{3.8}{13}{索引字段最好不要存在 NULL\relax }{section.3.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.9}组合索引可以只使用第一个，或者前两个，或者前几个}{14}{section.3.9}}
+\newlabel{2/9::doc}{{3.9}{14}{组合索引可以只使用第一个，或者前两个，或者前几个\relax }{section.3.9}{}}
+\newlabel{2/9:id1}{{3.9}{14}{组合索引可以只使用第一个，或者前两个，或者前几个\relax }{section.3.9}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}查询条件}{17}{chapter.4}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{3/0::doc}{{4}{17}{查询条件\relax }{chapter.4}{}}
+\newlabel{3/0:id1}{{4}{17}{查询条件\relax }{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}SQL 语句的 WHERE 条件避免无效条件和无效括号}{17}{section.4.1}}
+\newlabel{3/1::doc}{{4.1}{17}{SQL 语句的 WHERE 条件避免无效条件和无效括号\relax }{section.4.1}{}}
+\newlabel{3/1:sql-where}{{4.1}{17}{SQL 语句的 WHERE 条件避免无效条件和无效括号\relax }{section.4.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}SQL语句中不要加用不到的排序}{17}{section.4.2}}
+\newlabel{3/2::doc}{{4.2}{17}{SQL语句中不要加用不到的排序\relax }{section.4.2}{}}
+\newlabel{3/2:sql}{{4.2}{17}{SQL语句中不要加用不到的排序\relax }{section.4.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}WHERE 条件中 最好不要用 IN 和 LIKE}{17}{section.4.3}}
+\newlabel{3/3:where-in-like}{{4.3}{17}{WHERE 条件中 最好不要用 IN 和 LIKE\relax }{section.4.3}{}}
+\newlabel{3/3::doc}{{4.3}{17}{WHERE 条件中 最好不要用 IN 和 LIKE\relax }{section.4.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}WHERE 条件中不要使用 NOW() 等进行判断}{17}{section.4.4}}
+\newlabel{3/4::doc}{{4.4}{17}{WHERE 条件中不要使用 NOW() 等进行判断\relax }{section.4.4}{}}
+\newlabel{3/4:where-now}{{4.4}{17}{WHERE 条件中不要使用 NOW() 等进行判断\relax }{section.4.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}索引要使用的字段不要使用函数或者进行运算}{18}{section.4.5}}
+\newlabel{3/5::doc}{{4.5}{18}{索引要使用的字段不要使用函数或者进行运算\relax }{section.4.5}{}}
+\newlabel{3/5:id1}{{4.5}{18}{索引要使用的字段不要使用函数或者进行运算\relax }{section.4.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.6}禁止字段格式转换}{18}{section.4.6}}
+\newlabel{3/6::doc}{{4.6}{18}{禁止字段格式转换\relax }{section.4.6}{}}
+\newlabel{3/6:id1}{{4.6}{18}{禁止字段格式转换\relax }{section.4.6}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}存储过程}{19}{chapter.5}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{4/0::doc}{{5}{19}{存储过程\relax }{chapter.5}{}}
+\newlabel{4/0:id1}{{5}{19}{存储过程\relax }{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}存储过程中操作的记录数超过1000条时不能使用游标}{19}{section.5.1}}
+\newlabel{4/1::doc}{{5.1}{19}{存储过程中操作的记录数超过1000条时不能使用游标\relax }{section.5.1}{}}
+\newlabel{4/1:id1}{{5.1}{19}{存储过程中操作的记录数超过1000条时不能使用游标\relax }{section.5.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试}{20}{section.5.2}}
+\newlabel{4/2::doc}{{5.2}{20}{在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试\relax }{section.5.2}{}}
+\newlabel{4/2:id1}{{5.2}{20}{在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试\relax }{section.5.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}字符变量使用单引号，不要使用双引号}{23}{section.5.3}}
+\newlabel{4/3::doc}{{5.3}{23}{字符变量使用单引号，不要使用双引号\relax }{section.5.3}{}}
+\newlabel{4/3:id1}{{5.3}{23}{字符变量使用单引号，不要使用双引号\relax }{section.5.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}存储过程要能够重复执行，执行时需要清空历史冲突记录}{23}{section.5.4}}
+\newlabel{4/4::doc}{{5.4}{23}{存储过程要能够重复执行，执行时需要清空历史冲突记录\relax }{section.5.4}{}}
+\newlabel{4/4:id1}{{5.4}{23}{存储过程要能够重复执行，执行时需要清空历史冲突记录\relax }{section.5.4}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}远程表}{25}{chapter.6}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{5/0::doc}{{6}{25}{远程表\relax }{chapter.6}{}}
+\newlabel{5/0:id1}{{6}{25}{远程表\relax }{chapter.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}远程表结构要与原始表一致，尤其是索引}{25}{section.6.1}}
+\newlabel{5/1::doc}{{6.1}{25}{远程表结构要与原始表一致，尤其是索引\relax }{section.6.1}{}}
+\newlabel{5/1:id1}{{6.1}{25}{远程表结构要与原始表一致，尤其是索引\relax }{section.6.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}远程表数据不要大于256M，远程表的 WHERE 无效}{25}{section.6.2}}
+\newlabel{5/2:m-where}{{6.2}{25}{远程表数据不要大于256M，远程表的 WHERE 无效\relax }{section.6.2}{}}
+\newlabel{5/2::doc}{{6.2}{25}{远程表数据不要大于256M，远程表的 WHERE 无效\relax }{section.6.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}远程表一般用来全表小数据全量同步}{25}{section.6.3}}
+\newlabel{5/3::doc}{{6.3}{25}{远程表一般用来全表小数据全量同步\relax }{section.6.3}{}}
+\newlabel{5/3:id1}{{6.3}{25}{远程表一般用来全表小数据全量同步\relax }{section.6.3}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}查询技巧}{27}{chapter.7}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{6/0::doc}{{7}{27}{查询技巧\relax }{chapter.7}{}}
+\newlabel{6/0:id1}{{7}{27}{查询技巧\relax }{chapter.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}SQL语句不要太长}{27}{section.7.1}}
+\newlabel{6/1::doc}{{7.1}{27}{SQL语句不要太长\relax }{section.7.1}{}}
+\newlabel{6/1:sql}{{7.1}{27}{SQL语句不要太长\relax }{section.7.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}避免使用 LIKE}{27}{section.7.2}}
+\newlabel{6/2::doc}{{7.2}{27}{避免使用 LIKE\relax }{section.7.2}{}}
+\newlabel{6/2:like}{{7.2}{27}{避免使用 LIKE\relax }{section.7.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.3}WHERE 多个OR条件不走一个索引时可通过 UNION}{28}{section.7.3}}
+\newlabel{6/3:where-or-union}{{7.3}{28}{WHERE 多个OR条件不走一个索引时可通过 UNION\relax }{section.7.3}{}}
+\newlabel{6/3::doc}{{7.3}{28}{WHERE 多个OR条件不走一个索引时可通过 UNION\relax }{section.7.3}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}性能优化}{31}{chapter.8}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{7/0::doc}{{8}{31}{性能优化\relax }{chapter.8}{}}
+\newlabel{7/0:id1}{{8}{31}{性能优化\relax }{chapter.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.1}编译器、文件格式、磁盘、索引结构}{31}{section.8.1}}
+\newlabel{7/1::doc}{{8.1}{31}{编译器、文件格式、磁盘、索引结构\relax }{section.8.1}{}}
+\newlabel{7/1:id1}{{8.1}{31}{编译器、文件格式、磁盘、索引结构\relax }{section.8.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.2}使用type=heap的临时表}{31}{section.8.2}}
+\newlabel{7/2:type-heap}{{8.2}{31}{使用type=heap的临时表\relax }{section.8.2}{}}
+\newlabel{7/2::doc}{{8.2}{31}{使用type=heap的临时表\relax }{section.8.2}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {9}引擎使用}{33}{chapter.9}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{8/0::doc}{{9}{33}{引擎使用\relax }{chapter.9}{}}
+\newlabel{8/0:id1}{{9}{33}{引擎使用\relax }{chapter.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9.1}innodb引擎,在过程结尾提交，避免过度commit}{33}{section.9.1}}
+\newlabel{8/1::doc}{{9.1}{33}{innodb引擎,在过程结尾提交，避免过度commit\relax }{section.9.1}{}}
+\newlabel{8/1:innodb-commit}{{9.1}{33}{innodb引擎,在过程结尾提交，避免过度commit\relax }{section.9.1}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {10}权限控制}{35}{chapter.10}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{9/0::doc}{{10}{35}{权限控制\relax }{chapter.10}{}}
+\newlabel{9/0:id1}{{10}{35}{权限控制\relax }{chapter.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {10.1}PHP连接MYSQL的用户只分配SIUD权限}{35}{section.10.1}}
+\newlabel{9/1::doc}{{10.1}{35}{PHP连接MYSQL的用户只分配SIUD权限\relax }{section.10.1}{}}
+\newlabel{9/1:phpmysqlsiud}{{10.1}{35}{PHP连接MYSQL的用户只分配SIUD权限\relax }{section.10.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {10.2}所有提交变量经过 mysql\_real\_escape\_string 进行转义}{35}{section.10.2}}
+\newlabel{9/2::doc}{{10.2}{35}{所有提交变量经过 mysql\_real\_escape\_string 进行转义\relax }{section.10.2}{}}
+\newlabel{9/2:mysql-real-escape-string}{{10.2}{35}{所有提交变量经过 mysql\_real\_escape\_string 进行转义\relax }{section.10.2}{}}

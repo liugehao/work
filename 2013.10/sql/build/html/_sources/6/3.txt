@@ -1,0 +1,43 @@
+WHERE 多个OR条件不走一个索引时可通过 UNION
+=================================================================
+
+WHERE 多个OR条件不走一个索引时可通过 UNION，如【bm1=953016 or bm2=953016】改为【SELECT … WHERE BM1=953016 UNION ALL SELECT … WHERE BM2=953016】(merge index,explain的结果是using union(idx_name,idx_name))
+
+以下２条语句在９０Ｗ表中速度相当。
+
+.. code-block:: mysql
+
+    EXPLAIN SELECT 
+      emp_no,
+      first_name,
+      last_name,
+      hire_date 
+    FROM
+      employees 
+    WHERE last_name ='Demeyer' OR first_name='Gao' LIMIT 0, 1000000;
+
+
+.. image:: ../../images/5-1.png
+
+.. code-block:: mysql
+    
+    EXPLAIN SELECT 
+      emp_no,
+      first_name,
+      last_name,
+      hire_date 
+    FROM
+      employees 
+    WHERE last_name = 'Demeyer' 
+    UNION
+    SELECT 
+      emp_no,
+      first_name,
+      last_name,
+      hire_date 
+    FROM
+      employees 
+    WHERE first_name = 'Gao' 
+    LIMIT 0, 1000000 ;
+
+.. image:: ../../images/5-2.png

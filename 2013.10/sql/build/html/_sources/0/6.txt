@@ -1,0 +1,40 @@
+每个查询结果集使用的内存量不要超过256M，可以通过时间范围控制，如 RK BETWEEN A AND B，建议大表按可小时操作
+=======================================================================================================================================
+
+
+.. code-block:: mysql
+
+    SELECT 
+      id,
+      clxx_id,
+      cxxx_id,
+      qsd,
+      zdd 
+    FROM
+      xcbd 
+    WHERE del_flag = 1 
+    
+    
+
+改写为：
+
+
+.. code-block:: mysql
+
+    SELECT 
+      id,
+      clxx_id,
+      cxxx_id,
+      qsd,
+      zdd 
+    FROM
+      xcbd 
+    WHERE del_flag = 1 
+      AND lrsj BETWEEN (
+        '2012-01-01 00:00:00',
+        '2012-01-02 00:00:00'
+      )
+
+
+
+

@@ -1,0 +1,4 @@
+PHP连接MYSQL的用户只分配SIUD权限
+==============================================================
+
+PHP连接MYSQL的用户只分配SIUD权限,即：select, insert, update, delete

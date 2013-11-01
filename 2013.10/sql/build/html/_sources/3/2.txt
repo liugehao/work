@@ -1,0 +1,35 @@
+SQL语句中不要加用不到的排序
+==========================================
+
+排序使用主键索引，比不排序多了读取索引的步骤
+
+.. code-block:: mysql
+    EXPLAIN 
+    SELECT 
+      id,
+      cxxx_id,
+      gs_bm,
+      gdddsj,
+      gdlksj 
+    FROM
+      wdcx_tjd 
+     ORDER BY id DESC
+
+.. image:: ../../images/4-1.png
+
+
+不使用索引：
+
+.. code-block:: mysql
+
+    EXPLAIN 
+    SELECT 
+      id,
+      cxxx_id,
+      gs_bm,
+      gdddsj,
+      gdlksj 
+    FROM
+      wdcx_tjd 
+      
+.. image:: ../../images/4-2.png

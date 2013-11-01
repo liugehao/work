@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试 &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="../index.html" />
+    <link rel="up" title="存储过程" href="0.html" />
+    <link rel="next" title="字符变量使用单引号，不要使用双引号" href="3.html" />
+    <link rel="prev" title="存储过程中操作的记录数超过1000条时不能使用游标" href="1.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="3.html" title="字符变量使用单引号，不要使用双引号"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="1.html" title="存储过程中操作的记录数超过1000条时不能使用游标"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" accesskey="U">存储过程</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试</p>
+<p>建立日志表：</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="ss">`mylogs`</span> <span class="p">(</span>
+  <span class="ss">`produce_name`</span> <span class="kt">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="ss">`dt`</span> <span class="kt">DATETIME</span> <span class="k">DEFAULT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="ss">`step`</span> <span class="kt">SMALLINT</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="ss">`msg`</span> <span class="kt">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="no">NULL</span><span class="p">,</span>
+  <span class="k">KEY</span> <span class="ss">`produce_name`</span> <span class="p">(</span><span class="ss">`produce_name`</span><span class="p">,</span><span class="ss">`dt`</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">DELIMITER</span> <span class="o">//</span>
+<span class="k">CREATE</span> <span class="k">PROCEDURE</span> <span class="ss">`curdemo`</span> <span class="p">()</span>
+<span class="n">BEGIN</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">mylogs</span> <span class="p">(</span><span class="ss">`produce_name`</span><span class="p">,</span> <span class="ss">`dt`</span><span class="p">,</span> <span class="ss">`step`</span><span class="p">,</span> <span class="ss">`msg`</span><span class="p">)</span>
+  <span class="k">VALUES</span>
+    <span class="p">(</span>
+      <span class="n">procedure_name</span><span class="p">,</span>
+      <span class="nf">NOW</span><span class="p">(),</span>
+      <span class="mi">0</span><span class="p">,</span>
+      <span class="s1">&#39;程序开始&#39;</span>
+    <span class="p">)</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="n">done</span> <span class="kt">INT</span> <span class="k">DEFAULT</span> <span class="mi">0</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="n">procedure_name</span> <span class="kt">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="p">;</span>
+  <span class="kt">SET</span> <span class="n">procedure_name</span> <span class="o">=</span> <span class="s1">&#39;curdemo&#39;</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="n">a</span> <span class="kt">INT</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="n">b</span> <span class="kt">DATE</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="n">cur1</span> <span class="k">CURSOR</span> <span class="k">FOR</span>
+  <span class="k">SELECT</span>
+    <span class="n">emp_no</span><span class="p">,</span>
+    <span class="n">hire_date</span>
+  <span class="k">FROM</span>
+    <span class="n">employees</span>
+  <span class="k">WHERE</span> <span class="n">first_name</span> <span class="o">=</span> <span class="s1">&#39;Georgi&#39;</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="k">CONTINUE</span> <span class="n">HANDLER</span> <span class="k">FOR</span> <span class="k">SQLSTATE</span> <span class="s1">&#39;02000&#39;</span> <span class="kt">SET</span> <span class="n">done</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">;</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">mylogs</span> <span class="p">(</span><span class="ss">`produce_name`</span><span class="p">,</span> <span class="ss">`dt`</span><span class="p">,</span> <span class="ss">`step`</span><span class="p">,</span> <span class="ss">`msg`</span><span class="p">)</span>
+  <span class="k">VALUES</span>
+    <span class="p">(</span>
+      <span class="n">procedure_name</span><span class="p">,</span>
+      <span class="nf">NOW</span><span class="p">(),</span>
+      <span class="mi">1</span><span class="p">,</span>
+      <span class="s1">&#39;开始打开游标&#39;</span>
+    <span class="p">)</span> <span class="p">;</span>
+  <span class="n">OPEN</span> <span class="n">cur1</span> <span class="p">;</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">mylogs</span> <span class="p">(</span><span class="ss">`produce_name`</span><span class="p">,</span> <span class="ss">`dt`</span><span class="p">,</span> <span class="ss">`step`</span><span class="p">,</span> <span class="ss">`msg`</span><span class="p">)</span>
+  <span class="k">VALUES</span>
+    <span class="p">(</span>
+      <span class="n">procedure_name</span><span class="p">,</span>
+      <span class="nf">NOW</span><span class="p">(),</span>
+      <span class="mi">2</span><span class="p">,</span>
+      <span class="s1">&#39;结束打开游标&#39;</span>
+    <span class="p">)</span> <span class="p">;</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">mylogs</span> <span class="p">(</span><span class="ss">`produce_name`</span><span class="p">,</span> <span class="ss">`dt`</span><span class="p">,</span> <span class="ss">`step`</span><span class="p">,</span> <span class="ss">`msg`</span><span class="p">)</span>
+  <span class="k">VALUES</span>
+    <span class="p">(</span>
+      <span class="n">procedure_name</span><span class="p">,</span>
+      <span class="nf">NOW</span><span class="p">(),</span>
+      <span class="mi">3</span><span class="p">,</span>
+      <span class="s1">&#39;开始处理数据&#39;</span>
+    <span class="p">)</span> <span class="p">;</span>
+  <span class="k">REPEAT</span>
+    <span class="k">FETCH</span> <span class="n">cur1</span> <span class="k">INTO</span> <span class="n">a</span><span class="p">,</span>
+    <span class="n">b</span> <span class="p">;</span>
+    <span class="k">IF</span> <span class="k">NOT</span> <span class="n">done</span>
+    <span class="k">THEN</span> <span class="k">IF</span> <span class="n">hire_date</span> <span class="o">&lt;</span> <span class="s1">&#39;1989-10-01&#39;</span>
+    <span class="k">THEN</span>
+    <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">tmp1</span> <span class="p">(</span><span class="n">emp_no</span><span class="p">)</span>
+    <span class="k">VALUES</span>
+      <span class="p">(</span><span class="n">vemp_no</span><span class="p">)</span> <span class="p">;</span>
+    <span class="k">ELSE</span>
+    <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">tmp2</span> <span class="p">(</span><span class="n">emp_no</span><span class="p">)</span>
+    <span class="k">VALUES</span>
+      <span class="p">(</span><span class="n">vemp_no</span><span class="p">)</span> <span class="n">END</span> <span class="k">IF</span> <span class="p">;</span>
+    <span class="n">END</span> <span class="k">IF</span> <span class="p">;</span>
+    <span class="n">UNTIL</span> <span class="n">done</span>
+  <span class="n">END</span> <span class="k">REPEAT</span> <span class="p">;</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">mylogs</span> <span class="p">(</span><span class="ss">`produce_name`</span><span class="p">,</span> <span class="ss">`dt`</span><span class="p">,</span> <span class="ss">`step`</span><span class="p">,</span> <span class="ss">`msg`</span><span class="p">)</span>
+  <span class="k">VALUES</span>
+    <span class="p">(</span>
+      <span class="n">procedure_name</span><span class="p">,</span>
+      <span class="nf">NOW</span><span class="p">(),</span>
+      <span class="mi">4</span><span class="p">,</span>
+      <span class="s1">&#39;结束处理数据&#39;</span>
+    <span class="p">)</span> <span class="p">;</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">mylogs</span> <span class="p">(</span><span class="ss">`produce_name`</span><span class="p">,</span> <span class="ss">`dt`</span><span class="p">,</span> <span class="ss">`step`</span><span class="p">,</span> <span class="ss">`msg`</span><span class="p">)</span>
+  <span class="k">VALUES</span>
+    <span class="p">(</span>
+      <span class="n">procedure_name</span><span class="p">,</span>
+      <span class="nf">NOW</span><span class="p">(),</span>
+      <span class="mi">5</span><span class="p">,</span>
+      <span class="s1">&#39;关闭游标&#39;</span>
+    <span class="p">)</span> <span class="p">;</span>
+  <span class="n">CLOSE</span> <span class="n">cur1</span> <span class="p">;</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">mylogs</span> <span class="p">(</span><span class="ss">`produce_name`</span><span class="p">,</span> <span class="ss">`dt`</span><span class="p">,</span> <span class="ss">`step`</span><span class="p">,</span> <span class="ss">`msg`</span><span class="p">)</span>
+  <span class="k">VALUES</span>
+    <span class="p">(</span>
+      <span class="n">procedure_name</span><span class="p">,</span>
+      <span class="nf">NOW</span><span class="p">(),</span>
+      <span class="mi">6</span><span class="p">,</span>
+      <span class="s1">&#39;程序结束&#39;</span>
+    <span class="p">)</span> <span class="p">;</span>
+<span class="n">END</span> <span class="o">//</span>
+
+<span class="n">DELIMITER</span> <span class="p">;</span>
+</pre></div>
+</div>
+<p><em>INSERT INTO mylogs 可以写一个存储过程，以增加可读性。</em></p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="n">DELIMITER</span> <span class="o">//</span>
+<span class="k">CREATE</span> <span class="k">PROCEDURE</span> <span class="ss">`writelogs`</span> <span class="p">(</span>
+  <span class="k">IN</span> <span class="n">produce_name</span> <span class="kt">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+  <span class="k">IN</span> <span class="n">step</span> <span class="kt">SMALLINT</span><span class="p">,</span>
+  <span class="k">IN</span> <span class="n">msg</span> <span class="kt">CHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">BEGIN</span>
+  <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">mylogs</span> <span class="p">(</span><span class="ss">`produce_name`</span><span class="p">,</span> <span class="ss">`dt`</span><span class="p">,</span> <span class="ss">`step`</span><span class="p">,</span> <span class="ss">`msg`</span><span class="p">)</span>
+  <span class="k">VALUES</span>
+    <span class="p">(</span><span class="n">produce_name</span><span class="p">,</span> <span class="nf">NOW</span><span class="p">(),</span> <span class="n">step</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span> <span class="p">;</span>
+<span class="n">END</span> <span class="o">//</span>
+<span class="n">DELIMITER</span> <span class="p">;</span>
+</pre></div>
+</div>
+<p>程序改写后：</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="n">DELIMITER</span> <span class="o">//</span>
+<span class="k">CREATE</span> <span class="k">PROCEDURE</span> <span class="ss">`curdemo`</span> <span class="p">()</span>
+<span class="n">BEGIN</span>
+  <span class="k">DECLARE</span> <span class="n">procedure_name</span> <span class="kt">CHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">DEFAULT</span> <span class="s1">&#39;curdemo&#39;</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="n">done</span> <span class="kt">INT</span> <span class="k">DEFAULT</span> <span class="mi">0</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="n">a</span> <span class="kt">INT</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="n">b</span> <span class="kt">DATE</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="n">cur1</span> <span class="k">CURSOR</span> <span class="k">FOR</span>
+  <span class="k">SELECT</span>
+    <span class="n">emp_no</span><span class="p">,</span>
+    <span class="n">hire_date</span>
+  <span class="k">FROM</span>
+    <span class="n">employees</span>
+  <span class="k">WHERE</span> <span class="n">first_name</span> <span class="o">=</span> <span class="s1">&#39;Georgi&#39;</span> <span class="p">;</span>
+  <span class="k">DECLARE</span> <span class="k">CONTINUE</span> <span class="n">HANDLER</span> <span class="k">FOR</span> <span class="k">SQLSTATE</span> <span class="s1">&#39;02000&#39;</span> <span class="kt">SET</span> <span class="n">done</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">;</span>
+  <span class="k">CALL</span> <span class="nf">writelogs</span> <span class="p">(</span><span class="n">procedure_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;程序开始&#39;</span><span class="p">)</span> <span class="p">;</span>
+  <span class="k">CALL</span> <span class="nf">writelogs</span> <span class="p">(</span>
+    <span class="n">procedure_name</span><span class="p">,</span>
+    <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;开始打开游标&#39;</span>
+  <span class="p">)</span> <span class="p">;</span>
+  <span class="n">OPEN</span> <span class="n">cur1</span> <span class="p">;</span>
+  <span class="k">CALL</span> <span class="nf">writelogs</span> <span class="p">(</span>
+    <span class="n">procedure_name</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">&#39;结束打开游标&#39;</span>
+  <span class="p">)</span> <span class="p">;</span>
+  <span class="k">CALL</span> <span class="nf">writelogs</span> <span class="p">(</span>
+    <span class="n">procedure_name</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">,</span>
+    <span class="s1">&#39;开始处理数据&#39;</span>
+  <span class="p">)</span> <span class="p">;</span>
+  <span class="k">REPEAT</span>
+    <span class="k">FETCH</span> <span class="n">cur1</span> <span class="k">INTO</span> <span class="n">a</span><span class="p">,</span>
+    <span class="n">b</span> <span class="p">;</span>
+    <span class="k">IF</span> <span class="k">NOT</span> <span class="n">done</span>
+    <span class="k">THEN</span> <span class="k">IF</span> <span class="n">hire_date</span> <span class="o">&lt;</span> <span class="s1">&#39;1989-10-01&#39;</span>
+    <span class="k">THEN</span>
+    <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">tmp1</span> <span class="p">(</span><span class="n">emp_no</span><span class="p">)</span>
+    <span class="k">VALUES</span>
+      <span class="p">(</span><span class="n">vemp_no</span><span class="p">)</span> <span class="p">;</span>
+    <span class="k">ELSE</span>
+    <span class="k">INSERT</span> <span class="k">INTO</span> <span class="nf">tmp2</span> <span class="p">(</span><span class="n">emp_no</span><span class="p">)</span>
+    <span class="k">VALUES</span>
+      <span class="p">(</span><span class="n">vemp_no</span><span class="p">)</span> <span class="p">;</span>
+    <span class="n">END</span> <span class="k">IF</span> <span class="p">;</span>
+    <span class="n">END</span> <span class="k">IF</span> <span class="p">;</span>
+    <span class="n">UNTIL</span> <span class="n">done</span>
+  <span class="n">END</span> <span class="k">REPEAT</span> <span class="p">;</span>
+  <span class="k">CALL</span> <span class="nf">writelogs</span> <span class="p">(</span>
+    <span class="n">procedure_name</span><span class="p">,</span>
+    <span class="mi">4</span><span class="p">,</span>
+    <span class="s1">&#39;结束处理数据&#39;</span>
+  <span class="p">)</span> <span class="p">;</span>
+  <span class="k">CALL</span> <span class="nf">writelogs</span> <span class="p">(</span><span class="n">procedure_name</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;关闭游标&#39;</span><span class="p">)</span> <span class="p">;</span>
+  <span class="n">CLOSE</span> <span class="n">cur1</span> <span class="p">;</span>
+  <span class="k">CALL</span> <span class="nf">writelogs</span> <span class="p">(</span><span class="n">procedure_name</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;程序结束&#39;</span><span class="p">)</span> <span class="p">;</span>
+<span class="n">END</span> <span class="o">//</span>
+
+<span class="n">DELIMITER</span> <span class="p">;</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="1.html"
+                        title="previous chapter">存储过程中操作的记录数超过1000条时不能使用游标</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="3.html"
+                        title="next chapter">字符变量使用单引号，不要使用双引号</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/4/2.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="3.html" title="字符变量使用单引号，不要使用双引号"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="1.html" title="存储过程中操作的记录数超过1000条时不能使用游标"
+             >previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" >存储过程</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

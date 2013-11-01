@@ -1,0 +1,91 @@
+==========
+0 设计原则
+==========
+
+任何语句使用前explain看执行计划是否用到索引
+========================================
+
+.. code-block:: mysql
+
+    EXPLAIN 
+    SELECT 
+      id,
+      cxbm,
+      cxmc,
+      sfd,
+      mdd 
+    FROM
+      cxxx 
+    WHERE mdd = 210000
+
+
+    EXPLAIN 
+    SELECT 
+      id,
+      cxbm,
+      cxmc,
+      sfd,
+      mdd 
+    FROM
+      cxxx 
+    WHERE mdd = '210000' 
+    
+    
+    
+明细统计时，只统计编码，不要关联名称等冗余字段
+=====================================================
+
+.. code-block:: mysql
+
+    SELECT 
+      `cxxx_id`,
+      COUNT(1) 
+    FROM
+      `xcbd` 
+    WHERE cxxx_id = 23057901 
+
+.. image:: ../images/0-2.jpg
+
+
+使用汇总表
+=================================
+
+建立汇总表：
+
+.. code-block:: mysql
+
+    CREATE TABLE `xcbd_cxxx_count` (
+    `cxxx_id` INT PRIMARY KEY,
+    `count_num` INT
+    );
+
+定时插入数据进汇总表之前先清空汇总表：
+
+.. code-block:: mysql
+
+    TRUNCATE TABLE xcbd_cxxx_count;
+
+定时插入数据进汇总表：
+
+.. code-block:: mysql
+
+    INSERT INTO `xcbd_cxxx_count` (`cxxx_id`, `count_num`) 
+    SELECT 
+      `cxxx_id`,
+      COUNT(1) 
+    FROM
+      `xcbd` 
+    GROUP BY `cxxx_id` ;
+    
+查询汇总表数据：
+
+.. code-block:: mysql
+
+    SELECT 
+      cxxx_id,
+      count_num 
+    FROM
+      xcbd_cxxx_count 
+    WHERE cxxx_id = 23057901 
+
+.. image:: ../images/0-3.png

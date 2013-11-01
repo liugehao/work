@@ -1,0 +1,45 @@
+语句中避免使用 GROUP BY, 可通过批量程序定期汇总
+==================================================================
+
+.. code-block:: mysql
+
+    SELECT 
+      bd.clxx_id,
+      cl.cp,
+      COUNT(bd.clxx_id) 
+    FROM
+      `xcbd` AS bd 
+      INNER JOIN clxx AS cl 
+        ON bd.clxx_id = cl.id 
+
+
+或者
+
+.. code-block:: mysql
+
+    SELECT 
+      clxx_id,
+      COUNT(1),
+      (SELECT 
+        cp 
+      FROM
+        clxx 
+      WHERE id = xcbd.`clxx_id`) AS cp 
+    FROM
+      `xcbd` 
+
+
+正确做法
+
+.. code-block:: mysql
+
+    SELECT 
+      clxx_id,
+      COUNT(1) 
+    FROM
+      `xcbd` 
+      
+
+取出结果后，根据实际情况再取cp。cp, id可以考虑运用缓存存储
+
+

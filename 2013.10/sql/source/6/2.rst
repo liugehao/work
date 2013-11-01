@@ -1,0 +1,55 @@
+避免使用 LIKE
+=======================================================================
+
+避免使用 LIKE，【lrsj like "2012-09-23%"】 可改为 【LRSJ BETWEEN '2012-09-23 00:00:00' AND '2012-09-23 23:59:59'】或者left,right函数
+
+.. code-block:: mysql
+
+    SELECT 
+      emp_no,
+      first_name,
+      last_name,
+      hire_date 
+    FROM
+      employees 
+    WHERE hire_date LIKE '1989%' ;
+
+可以写为：
+
+.. code-block:: mysql
+
+    SELECT 
+      emp_no,
+      first_name,
+      last_name,
+      hire_date 
+    FROM
+      employees 
+    WHERE hire_date BETWEEN '1989-01-01' AND '1989-12-31' ;
+
+
+*left 与like结果有出入：*
+
+以下２条语句，like速度明显快于left函数.
+
+.. code-block:: mysql
+
+     SELECT 
+      emp_no,
+      first_name,
+      last_name,
+      hire_date 
+    FROM
+      employees 
+    WHERE last_name LIKE 'D%' LIMIT 0, 1000000;
+
+
+     SELECT 
+      emp_no,
+      first_name,
+      last_name,
+      hire_date 
+    FROM
+      employees 
+    WHERE LEFT(last_name,1) = 'D' LIMIT 0, 1000000;
+

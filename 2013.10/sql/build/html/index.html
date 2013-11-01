@@ -1,0 +1,189 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to sql教程’s documentation! &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="#" />
+    <link rel="next" title="设计原则" href="0/0.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="0/0.html" title="设计原则"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">sql教程 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-sql-s-documentation">
+<h1>Welcome to sql教程&#8217;s documentation!<a class="headerlink" href="#welcome-to-sql-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0/0.html">设计原则</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0/1.html">任何语句使用前explain看执行计划是否用到索引</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0/2.html">不要从明细表查统计结果，定期统计插入到汇总表</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="0/2.html#id2">一般做法</a></li>
+<li class="toctree-l3"><a class="reference internal" href="0/2.html#id3">使用汇总表</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="0/3.html">禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0/4.html">明细统计时，只统计编码，不要关联名称等冗余字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0/5.html">明细统计时，只统计编码，不要关联名称等冗余字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0/6.html">每个查询结果集使用的内存量不要超过256M，可以通过时间范围控制，如 RK BETWEEN A AND B，建议大表按可小时操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0/7.html">页面查询在10秒内要返回结果</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0/8.html">联合查询时，每个表必须加别名以提高SQL解析效率</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0/9.html">语句中避免使用 GROUP BY, 可通过批量程序定期汇总</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1/0.html">字段设计</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="1/1.html">尽可能使用更小的数据类型，如 TINYINT、smallint,MEDIUMINT、INT、BIGINT (如int(11)的11代表客户端显示宽度，并不是取值范围,tinyint -2^8-2^8-1,smallint -2^15-2^15-1 int -2^31-2^31-1 bigint -2^63-2^63-1)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1/2.html">尽量少用 TEXT、BLOB 等专有类型   (用链接代替)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1/3.html">字符型，数值型字段类型不能混合使用，依赖后期转换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1/4.html">相同字段不同表中的类型和长度要一致</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1/5.html">字段名称不能使用关键字</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1/6.html">不要指定字段级编码，建议全库统一</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1/7.html">默认值要规范，例如日期不要使用 0000-00-00</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1/8.html">不要用自增ID做主键</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1/9.html">不要使用外键</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1/10.html">事务相关记录保留时间戳，建议只增不改；在必须对记录进行修改的时候，保留更改时间戳</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2/0.html">索引使用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="2/1.html">一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2/2.html">每个表索引越少越好</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2/3.html">每个查询必须用到索引</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2/4.html">建立组合索引时，WHERE 条件中用到等于的字段放前边，用到范围的字段放后边</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2/5.html">删除重复字段的索引，减少dml IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2/6.html">除了主键外，避免建立其他唯一性索引</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2/7.html">索引中重复的记录数越少，效率越高，效率最高的是主键</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2/8.html">索引字段最好不要存在 NULL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2/9.html">组合索引可以只使用第一个，或者前两个，或者前几个</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="3/0.html">查询条件</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="3/1.html">SQL 语句的 WHERE 条件避免无效条件和无效括号</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3/2.html">SQL语句中不要加用不到的排序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3/3.html">WHERE 条件中 最好不要用 IN 和 LIKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3/4.html">WHERE 条件中不要使用 NOW() 等进行判断</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3/5.html">索引要使用的字段不要使用函数或者进行运算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3/6.html">禁止字段格式转换</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="4/0.html">存储过程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="4/1.html">存储过程中操作的记录数超过1000条时不能使用游标</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4/2.html">在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4/3.html">字符变量使用单引号，不要使用双引号</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4/4.html">存储过程要能够重复执行，执行时需要清空历史冲突记录</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="5/0.html">远程表</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="5/1.html">远程表结构要与原始表一致，尤其是索引</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5/2.html">远程表数据不要大于256M，远程表的 WHERE 无效</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5/3.html">远程表一般用来全表小数据全量同步</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="6/0.html">查询技巧</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="6/1.html">SQL语句不要太长</a></li>
+<li class="toctree-l2"><a class="reference internal" href="6/2.html">避免使用 LIKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="6/3.html">WHERE 多个OR条件不走一个索引时可通过 UNION</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="7/0.html">性能优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="7/1.html">编译器、文件格式、磁盘、索引结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="7/2.html">使用type=heap的临时表</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="8/0.html">引擎使用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="8/1.html">innodb引擎,在过程结尾提交，避免过度commit</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="9/0.html">权限控制</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="9/1.html">PHP连接MYSQL的用户只分配SIUD权限</a></li>
+<li class="toctree-l2"><a class="reference internal" href="9/2.html">所有提交变量经过 mysql_real_escape_string 进行转义</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Next topic</h4>
+  <p class="topless"><a href="0/0.html"
+                        title="next chapter">设计原则</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="0/0.html" title="设计原则"
+             >next</a> |</li>
+        <li><a href="#">sql教程 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

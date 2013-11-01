@@ -1,0 +1,48 @@
+存储过程中操作的记录数超过1000条时不能使用游标
+=============================================================================
+
+存储过程中操作的记录数超过1000条时不能使用游标 
+
+禁止游标，用临时表代替
+
+.. code-block:: sql
+    
+    DELIMITER //
+    CREATE PROCEDURE `curdemo`()
+    BEGIN
+      DECLARE done INT DEFAULT 0;
+      DECLARE a INT;
+      DECLARE b DATE;
+      DECLARE cur1 CURSOR FOR SELECT emp_no,hire_date FROM employees WHERE first_name='Georgi';
+      DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1; 
+      OPEN cur1; 
+      REPEAT
+        FETCH cur1 INTO a, b;
+        IF NOT done THEN
+           IF hire_date < '1989-10-01' THEN
+              INSERT INTO tmp1 (emp_no) VALUES (vemp_no);
+           ELSE
+              INSERT INTO tmp2 (emp_no) VALUES (vemp_no)
+           END IF;
+        END IF;
+      UNTIL done END REPEAT; 
+      CLOSE cur1;
+    END //
+    DELIMITER ;
+
+
+
+建立临时表：
+
+.. code-block:: mysql
+
+    DELIMITER //
+    CREATE PROCEDURE `curdemo`()
+    BEGIN
+    INSERT INTO tmp_table  (emp_no, hire_date) SELECT emp_no,hire_date FROM employees WHERE first_name='Georgi';
+
+    INSERT INTO tmp1 (emp_no) SELECT emp_no FROM tmp_table WHERE hire_date < '1989-10-01' ;
+    INSERT INTO tmp2 (emp_no) SELECT emp_no FROM tmp_table WHERE hire_date >='1989-10-01' ;
+    END //
+    DELIMITER ;
+

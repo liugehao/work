@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="robots" content="noindex,nofollow">
+
+<title>linux/zeromq install on rhel6.4 with php extension - MoinMoin DesktopEdition</title>
+<script type="text/javascript" src="zeromq%20install%20on%20rhel6.4%20with%20php%20extension_files/common.js"></script>
+
+<script type="text/javascript">
+<!-- // GUI edit link and i18n
+var gui_editor_link_href = "/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?action=edit&editor=gui";
+var gui_editor_link_text = "Edit (GUI)";
+//-->
+</script>
+
+<link rel="stylesheet" type="text/css" charset="utf-8" media="all" href="zeromq%20install%20on%20rhel6.4%20with%20php%20extension_files/common.css">
+<link rel="stylesheet" type="text/css" charset="utf-8" media="all" href="zeromq%20install%20on%20rhel6.4%20with%20php%20extension_files/print.css">
+
+<!-- css only for MS IE6/IE7 browsers -->
+<!--[if lt IE 8]>
+   <link rel="stylesheet" type="text/css" charset="utf-8" media="all" href="/moin_static197/modernized/css/msie.css">
+<![endif]-->
+
+
+<link rel="alternate" title="MoinMoin DesktopEdition: linux/zeromq install on rhel6.4 with php extension" href="http://localhost:800/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?diffs=1&amp;show_att=1&amp;action=rss_rc&amp;unique=0&amp;page=linux%2Fzeromq+install+on+rhel6.4+with+php+extension&amp;ddiffs=1" type="application/rss+xml">
+<link rel="alternate" type="application/wiki" title="Edit" href="http://localhost:800/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?action=edit">
+
+<link rel="Start" href="http://localhost:800/LanguageSetup">
+<link rel="Alternate" title="Wiki Markup" href="http://localhost:800/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?action=raw">
+<link rel="Alternate" media="print" title="Print View" href="http://localhost:800/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?action=print">
+<link rel="Up" href="http://localhost:800/linux">
+<link rel="Appendix" title="php_zeromq_client.php" href="http://localhost:800/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?action=AttachFile&amp;do=view&amp;target=php_zeromq_client.php">
+<link rel="Appendix" title="php_zeromq_server.php" href="http://localhost:800/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?action=AttachFile&amp;do=view&amp;target=php_zeromq_server.php">
+<link rel="Search" href="http://localhost:800/FindPage">
+<link rel="Index" href="http://localhost:800/TitleIndex">
+<link rel="Glossary" href="http://localhost:800/WordIndex">
+<link rel="Help" href="http://localhost:800/HelpOnFormatting">
+</head>
+
+<body dir="ltr" lang="en">
+<div id="page" dir="ltr" lang="zh">
+
+<ul id="pagelocation">
+<li><a href="http://localhost:800/linux">linux</a></li><li><a class="backlink" href="http://localhost:800/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?action=fullsearch&amp;context=180&amp;value=linkto%3A%22linux%2Fzeromq+install+on+rhel6.4+with+php+extension%22" rel="nofollow" title="Click to do a full-text search for this title">zeromq install on rhel6.4 with php extension</a></li>
+</ul>
+<div dir="ltr" id="content" lang="zh"><span class="anchor" id="top"></span>
+<span class="anchor" id="line-1"></span><p class="line874">Describe linux/zeromq install on rhel6.4 with php extension here. <span class="anchor" id="line-2"></span></p><hr><p class="line874"> <span class="anchor" id="line-3"></span><span class="anchor" id="line-4"></span></p><p class="line867">
+</p><h3 id="zeromq_install_on_rhel_6.4_x64">zeromq install on rhel 6.4 x64</h3>
+<span class="anchor" id="line-5"></span><p class="line867"><span class="anchor" id="line-6"></span><span class="anchor" id="line-7"></span><span class="anchor" id="line-8"></span><span class="anchor" id="line-9"></span><span class="anchor" id="line-10"></span><span class="anchor" id="line-11"></span></p><pre><span class="anchor" id="line-1"></span>cd /dev/yum.repo.d/
+<span class="anchor" id="line-2"></span>wget http://download.opensuse.org/repositories/home:/fengshuo:/zeromq/CentOS_CentOS-6/home:fengshuo:zeromq.repo
+<span class="anchor" id="line-3"></span>yum update
+<span class="anchor" id="line-4"></span>yum install zeromq
+<span class="anchor" id="line-5"></span>yum install zeromq-devel # for development</pre><span class="anchor" id="line-12"></span><span class="anchor" id="line-13"></span><p class="line867">
+</p><h3 id="php_zermoq_extension">php zermoq extension</h3>
+<span class="anchor" id="line-14"></span><p class="line867"><span class="anchor" id="line-15"></span><span class="anchor" id="line-16"></span><span class="anchor" id="line-17"></span><span class="anchor" id="line-18"></span><span class="anchor" id="line-19"></span><span class="anchor" id="line-20"></span><span class="anchor" id="line-21"></span><span class="anchor" id="line-22"></span><span class="anchor" id="line-23"></span><span class="anchor" id="line-24"></span><span class="anchor" id="line-25"></span></p><pre><span class="anchor" id="line-1-1"></span>yum install libxml2-devel
+<span class="anchor" id="line-2-1"></span>
+<span class="anchor" id="line-3-1"></span>wget http://cn2.php.net/distributions/php-5.5.4.tar.bz2
+<span class="anchor" id="line-4-1"></span>tar zxf php-5.5.4.tar.bz2
+<span class="anchor" id="line-5-1"></span>./configure
+<span class="anchor" id="line-6"></span>pear channel-discover pear.zero.mq
+<span class="anchor" id="line-7"></span>pecl install pear.zero.mq/zmq-beta
+<span class="anchor" id="line-8"></span>
+<span class="anchor" id="line-9"></span>cp ./php.ini-development /usr/local/lib/php.ini
+<span class="anchor" id="line-10"></span>vi /usr/local/lib/php.ini</pre><span class="anchor" id="line-26"></span><span class="anchor" id="line-27"></span><p class="line874">#add line  and save <span class="anchor" id="line-28"></span><span class="anchor" id="line-29"></span><span class="anchor" id="line-30"></span></p><pre><span class="anchor" id="line-1-2"></span>extension=zmq.so</pre><span class="anchor" id="line-31"></span><span class="anchor" id="line-32"></span><p class="line867">
+</p><h3 id="php_zeromq_server.php">php_zeromq_server.php</h3>
+<span class="anchor" id="line-33"></span><p class="line867"><a class="attachment" href="http://localhost:800/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?action=AttachFile&amp;do=view&amp;target=php_zeromq_server.php" title="">php_zeromq_server.php</a> <span class="anchor" id="line-34"></span><span class="anchor" id="line-35"></span><span class="anchor" id="line-36"></span><span class="anchor" id="line-37"></span><span class="anchor" id="line-38"></span><span class="anchor" id="line-39"></span><span class="anchor" id="line-40"></span><span class="anchor" id="line-41"></span><span class="anchor" id="line-42"></span><span class="anchor" id="line-43"></span><span class="anchor" id="line-44"></span><span class="anchor" id="line-45"></span><span class="anchor" id="line-46"></span><span class="anchor" id="line-47"></span><span class="anchor" id="line-48"></span><span class="anchor" id="line-1-1"></span></p><div class="highlight php"><div class="codearea" dir="ltr" lang="en">
+<script type="text/javascript">
+function isnumbered(obj) {
+  return obj.childNodes.length && obj.firstChild.childNodes.length && obj.firstChild.firstChild.className == 'LineNumber';
+}
+function nformat(num,chrs,add) {
+  var nlen = Math.max(0,chrs-(''+num).length), res = '';
+  while (nlen>0) { res += ' '; nlen-- }
+  return res+num+add;
+}
+function addnumber(did, nstart, nstep) {
+  var c = document.getElementById(did), l = c.firstChild, n = 1;
+  if (!isnumbered(c)) {
+    if (typeof nstart == 'undefined') nstart = 1;
+    if (typeof nstep  == 'undefined') nstep = 1;
+    var n = nstart;
+    while (l != null) {
+      if (l.tagName == 'SPAN') {
+        var s = document.createElement('SPAN');
+        var a = document.createElement('A');
+        s.className = 'LineNumber';
+        a.appendChild(document.createTextNode(nformat(n,4,'')));
+        a.href = '#' + did + '_' + n;
+        s.appendChild(a);
+        s.appendChild(document.createTextNode(' '));
+        n += nstep;
+        if (l.childNodes.length) {
+          l.insertBefore(s, l.firstChild);
+        }
+        else {
+          l.appendChild(s);
+        }
+      }
+      l = l.nextSibling;
+    }
+  }
+  return false;
+}
+function remnumber(did) {
+  var c = document.getElementById(did), l = c.firstChild;
+  if (isnumbered(c)) {
+    while (l != null) {
+      if (l.tagName == 'SPAN' && l.firstChild.className == 'LineNumber') l.removeChild(l.firstChild);
+      l = l.nextSibling;
+    }
+  }
+  return false;
+}
+function togglenumber(did, nstart, nstep) {
+  var c = document.getElementById(did);
+  if (isnumbered(c)) {
+    remnumber(did);
+  } else {
+    addnumber(did,nstart,nstep);
+  }
+  return false;
+}
+</script>
+
+<script type="text/javascript">
+document.write('<a href="#" onclick="return togglenumber(\'CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802\', 1, 1);" \
+                class="codenumbers">Toggle line numbers<\/a>');
+</script><a href="#" onclick="return togglenumber('CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802', 1, 1);" class="codenumbers">Toggle line numbers</a>
+<pre dir="ltr" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802" lang="en"><span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_1">   1</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_1"></span><span class="anchor" id="line-1-2"></span><span class="Preprc">&lt;?php</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_2">   2</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_2"></span><span class="anchor" id="line-2-1"></span><span class="ID">$context</span> = <span class="ResWord">new</span> <span class="ID">ZMQContext</span>(<span class="Number">1</span>);</span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_3">   3</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_3"></span><span class="anchor" id="line-3-1"></span><span class="Comment">// Socket to talk to clients</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_4">   4</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_4"></span><span class="anchor" id="line-4-1"></span><span class="Comment"></span><span class="ID">$responder</span> = <span class="ResWord">new</span> <span class="ID">ZMQSocket</span>(<span class="ID">$context</span>, <span class="ID">ZMQ</span>::<span class="ID">SOCKET_REP</span>);</span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_5">   5</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_5"></span><span class="anchor" id="line-5-1"></span><span class="ID">$responder</span>-&gt;<span class="ID">bind</span>(<span class="String">"</span><span class="String">tcp://*:5555</span><span class="String">"</span>);</span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_6">   6</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_6"></span><span class="anchor" id="line-6-1"></span><span class="ResWord">while</span>(<span class="ResWord">true</span>) {</span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_7">   7</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_7"></span><span class="anchor" id="line-7-1"></span><span class="Comment">// Wait for next request from client</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_8">   8</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_8"></span><span class="anchor" id="line-8-1"></span><span class="Comment"></span><span class="ID">$request</span> = <span class="ID">$responder</span>-&gt;<span class="ID">recv</span>();</span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_9">   9</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_9"></span><span class="anchor" id="line-9-1"></span><span class="Comment">//printf ("Received request: [%s]\n", $request);</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_10">  10</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_10"></span><span class="anchor" id="line-10-1"></span><span class="Comment"></span><span class="Comment">// Do some 'work'</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_11">  11</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_11"></span><span class="anchor" id="line-11-1"></span><span class="Comment"></span><span class="Comment">// Send reply back to client</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_12">  12</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_12"></span><span class="anchor" id="line-12-1"></span><span class="Comment"></span><span class="ID">$responder</span>-&gt;<span class="ID">send</span>(<span class="String">"</span><span class="String">World</span><span class="String">"</span>);</span>
+<span class="line"><span class="LineNumber"><a href="#CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_13">  13</a> </span><span class="LineAnchor" id="CA-2887fe6d1dcb4c2f9e199b58de15a7f3d881c802_13"></span><span class="anchor" id="line-13-1"></span>}</span>
+</pre></div></div><span class="anchor" id="line-49"></span><span class="anchor" id="line-50"></span><p class="line867">
+</p><h3 id="php_zeromq_client.php">php_zeromq_client.php</h3>
+<span class="anchor" id="line-51"></span><p class="line867"><a class="attachment" href="http://localhost:800/linux/zeromq%20install%20on%20rhel6.4%20with%20php%20extension?action=AttachFile&amp;do=view&amp;target=php_zeromq_client.php" title="">php_zeromq_client.php</a> <span class="anchor" id="line-52"></span><span class="anchor" id="line-53"></span><span class="anchor" id="line-54"></span><span class="anchor" id="line-55"></span><span class="anchor" id="line-56"></span><span class="anchor" id="line-57"></span><span class="anchor" id="line-58"></span><span class="anchor" id="line-59"></span><span class="anchor" id="line-60"></span><span class="anchor" id="line-61"></span><span class="anchor" id="line-62"></span><span class="anchor" id="line-63"></span><span class="anchor" id="line-64"></span><span class="anchor" id="line-65"></span><span class="anchor" id="line-66"></span><span class="anchor" id="line-67"></span><span class="anchor" id="line-68"></span><span class="anchor" id="line-69"></span><span class="anchor" id="line-70"></span><span class="anchor" id="line-71"></span><span class="anchor" id="line-72"></span><span class="anchor" id="line-73"></span><span class="anchor" id="line-74"></span><span class="anchor" id="line-75"></span><span class="anchor" id="line-1-3"></span></p><div class="highlight php"><div class="codearea" dir="ltr" lang="en">
+<script type="text/javascript">
+document.write('<a href="#" onclick="return togglenumber(\'CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab\', 1, 1);" \
+                class="codenumbers">Toggle line numbers<\/a>');
+</script><a href="#" onclick="return togglenumber('CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab', 1, 1);" class="codenumbers">Toggle line numbers</a>
+<pre dir="ltr" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab" lang="en"><span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_1">   1</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_1"></span><span class="anchor" id="line-1-4"></span><span class="Preprc">&lt;?php</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_2">   2</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_2"></span><span class="anchor" id="line-2-2"></span><span class="Comment">//count exec time</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_3">   3</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_3"></span><span class="anchor" id="line-3-2"></span><span class="Comment"></span><span class="ResWord">function</span> <span class="ID">time1</span>(){</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_4">   4</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_4"></span><span class="anchor" id="line-4-2"></span>    <span class="ResWord">list</span>(<span class="ID">$a</span>, <span class="ID">$b</span>) = <span class="ResWord">explode</span>(<span class="String">"</span><span class="String"> </span><span class="String">"</span>, <span class="ResWord">microtime</span>());</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_5">   5</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_5"></span><span class="anchor" id="line-5-2"></span>    <span class="ResWord">return</span> ((<span class="ID">float</span>)<span class="ID">$a</span> + (<span class="ID">float</span>)<span class="ID">$b</span>);</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_6">   6</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_6"></span><span class="anchor" id="line-6-2"></span>}</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_7">   7</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_7"></span><span class="anchor" id="line-7-2"></span><span class="ID">$start_time</span> = <span class="ID">time1</span>();</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_8">   8</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_8"></span><span class="anchor" id="line-8-2"></span><span class="ID">$count</span> = <span class="Number">100000</span>;</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_9">   9</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_9"></span><span class="anchor" id="line-9-2"></span><span class="ID">$sucesscount</span> = <span class="Number">0</span>;</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_10">  10</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_10"></span><span class="anchor" id="line-10-2"></span><span class="ID">$context</span> = <span class="ResWord">new</span> <span class="ID">ZMQContext</span>();</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_11">  11</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_11"></span><span class="anchor" id="line-11-2"></span> <span class="Comment">//  Socket to talk to server</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_12">  12</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_12"></span><span class="anchor" id="line-12-2"></span><span class="Comment"></span><span class="ResWord">echo</span> <span class="String">"</span><span class="String">Connecting to hello world server...</span><span class="SPChar">\n</span><span class="String">"</span>;</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_13">  13</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_13"></span><span class="anchor" id="line-13-2"></span><span class="ID">$requester</span> = <span class="ResWord">new</span> <span class="ID">ZMQSocket</span>(<span class="ID">$context</span>, <span class="ID">ZMQ</span>::<span class="ID">SOCKET_REQ</span>);</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_14">  14</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_14"></span><span class="anchor" id="line-14-1"></span><span class="ID">$requester</span>-&gt;<span class="ID">connect</span>(<span class="String">"</span><span class="String">tcp://localhost:5555</span><span class="String">"</span>);</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_15">  15</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_15"></span><span class="anchor" id="line-15-1"></span><span class="ResWord">for</span>(<span class="ID">$request_nbr</span> = <span class="Number">0</span>; <span class="ID">$request_nbr</span> != <span class="ID">$count</span>; <span class="ID">$request_nbr</span>++) {</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_16">  16</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_16"></span><span class="anchor" id="line-16-1"></span>    <span class="Comment">//printf ("Sending request %d...\n", $request_nbr);</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_17">  17</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_17"></span><span class="anchor" id="line-17-1"></span><span class="Comment"></span>    <span class="ID">$requester</span>-&gt;<span class="ID">send</span>(<span class="String">"</span><span class="String">Hello</span><span class="String">"</span>);</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_18">  18</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_18"></span><span class="anchor" id="line-18-1"></span>    <span class="ID">$reply</span> = <span class="ID">$requester</span>-&gt;<span class="ID">recv</span>();</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_19">  19</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_19"></span><span class="anchor" id="line-19-1"></span>    <span class="ResWord">if</span>(<span class="ID">$reply</span> == <span class="String">"</span><span class="String">World</span><span class="String">"</span>)<span class="ID">$sucesscount</span> ++;</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_20">  20</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_20"></span><span class="anchor" id="line-20-1"></span>    <span class="Comment">//printf ("Received reply %d: [%s]\n", $request_nbr, $reply);</span></span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_21">  21</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_21"></span><span class="anchor" id="line-21-1"></span><span class="Comment"></span>}</span>
+<span class="line"><span class="LineNumber"><a href="#CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_22">  22</a> </span><span class="LineAnchor" id="CA-1f8cb3e0738e46abe7831c3bba57f8d6a9079bab_22"></span><span class="anchor" id="line-22-1"></span><span class="ResWord">echo</span> <span class="String">"</span><span class="SPChar">\n</span><span class="String">seconds for send </span><span class="String">{</span><span class="ID">$count</span><span class="String">}</span><span class="String"> times 'hello' :</span><span class="String">"</span> .  (<span class="ID">time1</span>()- <span class="ID">$start_time</span>).<span class="String">"</span><span class="SPChar">\n</span><span class="String"> sucesscount:</span><span class="String">{</span><span class="ID">$sucesscount</span><span class="String">}</span><span class="String">"</span>;</span>
+</pre></div></div><span class="anchor" id="line-76"></span><span class="anchor" id="line-77"></span><p class="line867">
+</p><h3 id="test">test</h3>
+<span class="anchor" id="line-78"></span><p class="line867"><span class="anchor" id="line-79"></span><span class="anchor" id="line-80"></span></p><pre><span class="anchor" id="line-1-3"></span>php php_zeromq_client.php &amp; php php_zeromq_client.php &amp; php php_zeromq_client.php &amp; php php_zeromq_client.php &amp; php php_zeromq_client.php &amp; php php_zeromq_client.php &amp; php php_zeromq_client.php &amp; php php_zeromq_client.php &amp; php php_zeromq_client.php &amp; php php_zeromq_client.php &amp;</pre><span class="anchor" id="line-81"></span><span class="anchor" id="line-82"></span><p class="line874">=== 测试结果  == <span class="anchor" id="line-83"></span>单server进程，10客户进程并发，单进程１０Ｗ次发送接收，用时最快４２s，平均２０８３３/s　- ２３５００/s之间 <span class="anchor" id="line-84"></span><span class="anchor" id="line-85"></span><span class="anchor" id="line-86"></span><span class="anchor" id="line-87"></span><span class="anchor" id="line-88"></span><span class="anchor" id="line-89"></span><span class="anchor" id="line-90"></span><span class="anchor" id="line-91"></span><span class="anchor" id="line-92"></span><span class="anchor" id="line-93"></span><span class="anchor" id="line-94"></span><span class="anchor" id="line-95"></span><span class="anchor" id="line-96"></span><span class="anchor" id="line-97"></span><span class="anchor" id="line-98"></span><span class="anchor" id="line-99"></span><span class="anchor" id="line-100"></span><span class="anchor" id="line-101"></span><span class="anchor" id="line-102"></span><span class="anchor" id="line-103"></span><span class="anchor" id="line-104"></span><span class="anchor" id="line-105"></span><span class="anchor" id="line-106"></span><span class="anchor" id="line-107"></span><span class="anchor" id="line-108"></span><span class="anchor" id="line-109"></span><span class="anchor" id="line-110"></span><span class="anchor" id="line-111"></span><span class="anchor" id="line-112"></span><span class="anchor" id="line-113"></span><span class="anchor" id="line-114"></span><span class="anchor" id="line-115"></span><span class="anchor" id="line-116"></span><span class="anchor" id="line-117"></span><span class="anchor" id="line-118"></span><span class="anchor" id="line-119"></span><span class="anchor" id="line-120"></span><span class="anchor" id="line-121"></span><span class="anchor" id="line-122"></span><span class="anchor" id="line-123"></span><span class="anchor" id="line-124"></span><span class="anchor" id="line-125"></span><span class="anchor" id="line-126"></span><span class="anchor" id="line-127"></span><span class="anchor" id="line-128"></span><span class="anchor" id="line-129"></span></p><pre><span class="anchor" id="line-1-4"></span>seconds for send 100000 times 'hello' :42.54803109169
+<span class="anchor" id="line-2-2"></span> sucesscount:100000
+<span class="anchor" id="line-3-2"></span>seconds for send 100000 times 'hello' :42.549309015274
+<span class="anchor" id="line-4-2"></span> sucesscount:100000
+<span class="anchor" id="line-5-2"></span>seconds for send 100000 times 'hello' :42.571755886078
+<span class="anchor" id="line-6-1"></span> sucesscount:100000
+<span class="anchor" id="line-7-1"></span>seconds for send 100000 times 'hello' :42.506102800369
+<span class="anchor" id="line-8-1"></span> sucesscount:100000
+<span class="anchor" id="line-9-1"></span>seconds for send 100000 times 'hello' :42.516571998596
+<span class="anchor" id="line-10-1"></span> sucesscount:100000
+<span class="anchor" id="line-11"></span>seconds for send 100000 times 'hello' :42.603147983551
+<span class="anchor" id="line-12"></span> sucesscount:100000
+<span class="anchor" id="line-13"></span>seconds for send 100000 times 'hello' :42.622861862183
+<span class="anchor" id="line-14"></span> sucesscount:100000
+<span class="anchor" id="line-15"></span>seconds for send 100000 times 'hello' :42.589258909225
+<span class="anchor" id="line-16"></span> sucesscount:100000
+<span class="anchor" id="line-17"></span>seconds for send 100000 times 'hello' :42.608597040176
+<span class="anchor" id="line-18"></span> sucesscount:100000
+<span class="anchor" id="line-19"></span>seconds for send 100000 times 'hello' :42.613350152969
+<span class="anchor" id="line-20"></span>
+<span class="anchor" id="line-21"></span>
+<span class="anchor" id="line-22"></span>
+<span class="anchor" id="line-23"></span>
+<span class="anchor" id="line-24"></span>seconds for send 100000 times 'hello' :48.482357025146
+<span class="anchor" id="line-25"></span> sucesscount:100000
+<span class="anchor" id="line-26"></span>seconds for send 100000 times 'hello' :48.780467987061
+<span class="anchor" id="line-27"></span> sucesscount:100000
+<span class="anchor" id="line-28"></span>seconds for send 100000 times 'hello' :48.771656036377
+<span class="anchor" id="line-29"></span> sucesscount:100000
+<span class="anchor" id="line-30"></span>seconds for send 100000 times 'hello' :48.794227838516
+<span class="anchor" id="line-31"></span> sucesscount:100000
+<span class="anchor" id="line-32"></span>seconds for send 100000 times 'hello' :48.816515922546
+<span class="anchor" id="line-33"></span> sucesscount:100000
+<span class="anchor" id="line-34"></span>seconds for send 100000 times 'hello' :48.832470178604
+<span class="anchor" id="line-35"></span> sucesscount:100000
+<span class="anchor" id="line-36"></span>seconds for send 100000 times 'hello' :48.853888034821
+<span class="anchor" id="line-37"></span> sucesscount:100000
+<span class="anchor" id="line-38"></span>seconds for send 100000 times 'hello' :48.85328912735
+<span class="anchor" id="line-39"></span> sucesscount:100000
+<span class="anchor" id="line-40"></span>seconds for send 100000 times 'hello' :48.888187885284
+<span class="anchor" id="line-41"></span> sucesscount:100000
+<span class="anchor" id="line-42"></span>seconds for send 100000 times 'hello' :48.886878013611
+<span class="anchor" id="line-43"></span> sucesscount:100000</pre><span class="anchor" id="line-130"></span><span class="anchor" id="bottom"></span></div><p id="pageinfo" class="info" dir="ltr" lang="en">linux/zeromq install on rhel6.4 with php extension  (last edited 2013-10-14 05:35:24 by <span title="liugehao @ localhost[127.0.0.1]"><a href="http://localhost:800/liugehao" title="liugehao @ localhost[127.0.0.1]">liugehao</a></span>)</p>
+<div id="pagebottom"></div>
+</div>
+
+
+
+</body></html>

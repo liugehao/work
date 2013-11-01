@@ -1,0 +1,133 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>禁止字段格式转换 &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="../index.html" />
+    <link rel="up" title="查询条件" href="0.html" />
+    <link rel="next" title="存储过程" href="../4/0.html" />
+    <link rel="prev" title="索引要使用的字段不要使用函数或者进行运算" href="5.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../4/0.html" title="存储过程"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="5.html" title="索引要使用的字段不要使用函数或者进行运算"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" accesskey="U">查询条件</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>禁止字段格式转换<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>禁止字段格式转换，如 SELECT * FROM GS WHERE BM=200000，数值两边不要加引号</p>
+<p>大多数字段使用函数不会使用索引，只有形如left(BM)=&#8216;200000&#8217;等可以使用)</p>
+<p>查询条件和字段类型不一致，没有用到索引：</p>
+<img alt="../_images/4-3.png" src="../_images/4-3.png" />
+<p>查询条件和字段类型不一致，用到索引：</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">EXPLAIN</span> <span class="n">EXTENDED</span>
+<span class="k">SELECT</span>
+  <span class="n">emp_no</span><span class="p">,</span>
+  <span class="n">birth_date</span><span class="p">,</span>
+  <span class="n">first_name</span><span class="p">,</span>
+  <span class="n">last_name</span><span class="p">,</span>
+  <span class="n">gender</span> <span class="n">hire_date</span>
+<span class="k">FROM</span>
+  <span class="n">employees</span>
+<span class="k">WHERE</span> <span class="n">last_name</span><span class="o">=</span><span class="s1">&#39;100001&#39;</span>
+</pre></div>
+</div>
+<img alt="../_images/4-4.png" src="../_images/4-4.png" />
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="5.html"
+                        title="previous chapter">索引要使用的字段不要使用函数或者进行运算</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../4/0.html"
+                        title="next chapter">存储过程</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/3/6.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../4/0.html" title="存储过程"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="5.html" title="索引要使用的字段不要使用函数或者进行运算"
+             >previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" >查询条件</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

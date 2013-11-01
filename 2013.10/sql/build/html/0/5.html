@@ -1,0 +1,147 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>明细统计时，只统计编码，不要关联名称等冗余字段 &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="../index.html" />
+    <link rel="up" title="0 设计原则" href="0.html" />
+    <link rel="next" title="联合查询时，每个表必须加别名以提高SQL解析效率，如 SELECT T1.BM FROM GS T1 LEFT JOIN GSJJ T2 ON T1.BM=T2.BM" href="6.html" />
+    <link rel="prev" title="禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表" href="4.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="6.html" title="联合查询时，每个表必须加别名以提高SQL解析效率，如 SELECT T1.BM FROM GS T1 LEFT JOIN GSJJ T2 ON T1.BM=T2.BM"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="4.html" title="禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" accesskey="U">0 设计原则</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>明细统计时，只统计编码，不要关联名称等冗余字段<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">SELECT</span>
+  <span class="n">bd</span><span class="p">.</span><span class="n">clxx_id</span><span class="p">,</span>
+  <span class="n">cl</span><span class="p">.</span><span class="n">cp</span><span class="p">,</span>
+  <span class="nf">COUNT</span><span class="p">(</span><span class="n">bd</span><span class="p">.</span><span class="n">clxx_id</span><span class="p">)</span>
+<span class="k">FROM</span>
+  <span class="ss">`xcbd`</span> <span class="k">AS</span> <span class="n">bd</span>
+  <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">clxx</span> <span class="k">AS</span> <span class="n">cl</span>
+    <span class="k">ON</span> <span class="n">bd</span><span class="p">.</span><span class="n">clxx_id</span> <span class="o">=</span> <span class="n">cl</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>或者</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">SELECT</span>
+  <span class="n">clxx_id</span><span class="p">,</span>
+  <span class="nf">COUNT</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+  <span class="p">(</span><span class="k">SELECT</span>
+    <span class="n">cp</span>
+  <span class="k">FROM</span>
+    <span class="n">clxx</span>
+  <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="n">xcbd</span><span class="p">.</span><span class="ss">`clxx_id`</span><span class="p">)</span> <span class="k">AS</span> <span class="n">cp</span>
+<span class="k">FROM</span>
+  <span class="ss">`xcbd`</span>
+</pre></div>
+</div>
+<p>正确做法</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">SELECT</span>
+  <span class="n">clxx_id</span><span class="p">,</span>
+  <span class="nf">COUNT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">FROM</span>
+  <span class="ss">`xcbd`</span>
+</pre></div>
+</div>
+<p>取出结果后，根据实际情况再取cp。cp, id可以考虑运用缓存存储</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="4.html"
+                        title="previous chapter">禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="6.html"
+                        title="next chapter">联合查询时，每个表必须加别名以提高SQL解析效率，如 SELECT T1.BM FROM GS T1 LEFT JOIN GSJJ T2 ON T1.BM=T2.BM</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/0/5.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="6.html" title="联合查询时，每个表必须加别名以提高SQL解析效率，如 SELECT T1.BM FROM GS T1 LEFT JOIN GSJJ T2 ON T1.BM=T2.BM"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="4.html" title="禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表"
+             >previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" >0 设计原则</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

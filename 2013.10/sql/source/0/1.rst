@@ -1,0 +1,24 @@
+
+任何语句使用前explain看执行计划是否用到索引
+========================================
+
+.. code-block:: mysql
+
+    EXPLAIN 
+    SELECT 
+      `emp_no`,
+      `birth_date`,
+      `first_name`,
+      `last_name`,
+      `gender`,
+      `hire_date` 
+    FROM
+      `employees` 
+    WHERE `first_name` = 'Georgi' 
+
+
++---+-----------+----------+-----+-------------+----+--------+-----+-------+-----------+
+|id |select_type|table	   |type |possible_keys|key	|key_len |ref  |rows   |Extra      |
++===+======================+=====+=============+====|========+=====+=======+===========+
+|1	|SIMPLE	    |employees |ALL	 |             |    |        |     |281092 |Using where|
++---+-----------+----------+-----+-------------+----+--------+-----+-------+-----------+

@@ -1,0 +1,27 @@
+联合查询时，每个表必须加别名以提高SQL解析效率
+==========================================================================================
+
+如 SELECT T1.BM FROM GS T1 LEFT JOIN GSJJ T2 ON T1.BM=T2.BM
+
+.. code-block:: mysql
+
+    SELECT 
+      clxx_id,
+      cp,
+      COUNT(clxx_id) 
+    FROM
+      `xcbd` clxx 
+    WHERE clxx_id = id ;
+
+正确做法：
+
+.. code-block:: mysql
+
+    SELECT 
+      bd.clxx_id,
+      cl.cp,
+      COUNT(bd.clxx_id) 
+    FROM
+      `xcbd` AS bd ;
+      INNER JOIN clxx AS cl 
+        ON bd.clxx_id = cl.id 

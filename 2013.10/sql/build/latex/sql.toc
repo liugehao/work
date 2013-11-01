@@ -1,0 +1,62 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}设计原则}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}任何语句使用前explain看执行计划是否用到索引}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}不要从明细表查统计结果，定期统计插入到汇总表}{1}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}一般做法}{1}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.2}使用汇总表}{2}{subsection.1.2.2}
+\contentsline {section}{\numberline {1.3}禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表}{2}{section.1.3}
+\contentsline {section}{\numberline {1.4}明细统计时，只统计编码，不要关联名称等冗余字段}{3}{section.1.4}
+\contentsline {section}{\numberline {1.5}明细统计时，只统计编码，不要关联名称等冗余字段}{3}{section.1.5}
+\contentsline {section}{\numberline {1.6}每个查询结果集使用的内存量不要超过256M，可以通过时间范围控制，如 RK BETWEEN A AND B，建议大表按可小时操作}{4}{section.1.6}
+\contentsline {section}{\numberline {1.7}页面查询在10秒内要返回结果}{5}{section.1.7}
+\contentsline {section}{\numberline {1.8}联合查询时，每个表必须加别名以提高SQL解析效率}{5}{section.1.8}
+\contentsline {section}{\numberline {1.9}语句中避免使用 GROUP BY, 可通过批量程序定期汇总}{5}{section.1.9}
+\contentsline {chapter}{\numberline {2}字段设计}{7}{chapter.2}
+\contentsline {section}{\numberline {2.1}尽可能使用更小的数据类型，如 TINYINT、smallint,MEDIUMINT、INT、BIGINT (如int(11)的11代表客户端显示宽度，并不是取值范围,tinyint -2\textasciicircum {}8-2\textasciicircum {}8-1,smallint -2\textasciicircum {}15-2\textasciicircum {}15-1 int -2\textasciicircum {}31-2\textasciicircum {}31-1 bigint -2\textasciicircum {}63-2\textasciicircum {}63-1)}{7}{section.2.1}
+\contentsline {section}{\numberline {2.2}尽量少用 TEXT、BLOB 等专有类型 (用链接代替)}{7}{section.2.2}
+\contentsline {section}{\numberline {2.3}字符型，数值型字段类型不能混合使用，依赖后期转换}{7}{section.2.3}
+\contentsline {section}{\numberline {2.4}相同字段不同表中的类型和长度要一致}{7}{section.2.4}
+\contentsline {section}{\numberline {2.5}字段名称不能使用关键字}{7}{section.2.5}
+\contentsline {section}{\numberline {2.6}不要指定字段级编码，建议全库统一}{7}{section.2.6}
+\contentsline {section}{\numberline {2.7}默认值要规范，例如日期不要使用 0000-00-00}{8}{section.2.7}
+\contentsline {section}{\numberline {2.8}不要用自增ID做主键}{8}{section.2.8}
+\contentsline {section}{\numberline {2.9}不要使用外键}{8}{section.2.9}
+\contentsline {section}{\numberline {2.10}事务相关记录保留时间戳，建议只增不改；在必须对记录进行修改的时候，保留更改时间戳}{8}{section.2.10}
+\contentsline {chapter}{\numberline {3}索引使用}{9}{chapter.3}
+\contentsline {section}{\numberline {3.1}一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)}{9}{section.3.1}
+\contentsline {section}{\numberline {3.2}每个表索引越少越好}{13}{section.3.2}
+\contentsline {section}{\numberline {3.3}每个查询必须用到索引}{13}{section.3.3}
+\contentsline {section}{\numberline {3.4}建立组合索引时，WHERE 条件中用到等于的字段放前边，用到范围的字段放后边}{13}{section.3.4}
+\contentsline {section}{\numberline {3.5}删除重复字段的索引，减少dml IO}{13}{section.3.5}
+\contentsline {section}{\numberline {3.6}除了主键外，避免建立其他唯一性索引}{13}{section.3.6}
+\contentsline {section}{\numberline {3.7}索引中重复的记录数越少，效率越高，效率最高的是主键}{13}{section.3.7}
+\contentsline {section}{\numberline {3.8}索引字段最好不要存在 NULL}{13}{section.3.8}
+\contentsline {section}{\numberline {3.9}组合索引可以只使用第一个，或者前两个，或者前几个}{14}{section.3.9}
+\contentsline {chapter}{\numberline {4}查询条件}{17}{chapter.4}
+\contentsline {section}{\numberline {4.1}SQL 语句的 WHERE 条件避免无效条件和无效括号}{17}{section.4.1}
+\contentsline {section}{\numberline {4.2}SQL语句中不要加用不到的排序}{17}{section.4.2}
+\contentsline {section}{\numberline {4.3}WHERE 条件中 最好不要用 IN 和 LIKE}{17}{section.4.3}
+\contentsline {section}{\numberline {4.4}WHERE 条件中不要使用 NOW() 等进行判断}{17}{section.4.4}
+\contentsline {section}{\numberline {4.5}索引要使用的字段不要使用函数或者进行运算}{18}{section.4.5}
+\contentsline {section}{\numberline {4.6}禁止字段格式转换}{18}{section.4.6}
+\contentsline {chapter}{\numberline {5}存储过程}{19}{chapter.5}
+\contentsline {section}{\numberline {5.1}存储过程中操作的记录数超过1000条时不能使用游标}{19}{section.5.1}
+\contentsline {section}{\numberline {5.2}在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试}{20}{section.5.2}
+\contentsline {section}{\numberline {5.3}字符变量使用单引号，不要使用双引号}{23}{section.5.3}
+\contentsline {section}{\numberline {5.4}存储过程要能够重复执行，执行时需要清空历史冲突记录}{23}{section.5.4}
+\contentsline {chapter}{\numberline {6}远程表}{25}{chapter.6}
+\contentsline {section}{\numberline {6.1}远程表结构要与原始表一致，尤其是索引}{25}{section.6.1}
+\contentsline {section}{\numberline {6.2}远程表数据不要大于256M，远程表的 WHERE 无效}{25}{section.6.2}
+\contentsline {section}{\numberline {6.3}远程表一般用来全表小数据全量同步}{25}{section.6.3}
+\contentsline {chapter}{\numberline {7}查询技巧}{27}{chapter.7}
+\contentsline {section}{\numberline {7.1}SQL语句不要太长}{27}{section.7.1}
+\contentsline {section}{\numberline {7.2}避免使用 LIKE}{27}{section.7.2}
+\contentsline {section}{\numberline {7.3}WHERE 多个OR条件不走一个索引时可通过 UNION}{28}{section.7.3}
+\contentsline {chapter}{\numberline {8}性能优化}{31}{chapter.8}
+\contentsline {section}{\numberline {8.1}编译器、文件格式、磁盘、索引结构}{31}{section.8.1}
+\contentsline {section}{\numberline {8.2}使用type=heap的临时表}{31}{section.8.2}
+\contentsline {chapter}{\numberline {9}引擎使用}{33}{chapter.9}
+\contentsline {section}{\numberline {9.1}innodb引擎,在过程结尾提交，避免过度commit}{33}{section.9.1}
+\contentsline {chapter}{\numberline {10}权限控制}{35}{chapter.10}
+\contentsline {section}{\numberline {10.1}PHP连接MYSQL的用户只分配SIUD权限}{35}{section.10.1}
+\contentsline {section}{\numberline {10.2}所有提交变量经过 mysql\_real\_escape\_string 进行转义}{35}{section.10.2}

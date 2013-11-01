@@ -1,0 +1,86 @@
+存储过程要能够重复执行，执行时需要清空历史冲突记录
+=========================================================
+
+存储过程要能够重复执行，执行时需要清空历史冲突记录, 比如程序重新执行计算，或者上次执行未到中途取消...
+
+.. code-block:: mysql
+
+    DELIMITER //
+    CREATE PROCEDURE `curdemo` () 
+    BEGIN
+      DECLARE procedure_name CHAR(20) DEFAULT 'curdemo' ;
+      DECLARE done INT DEFAULT 0 ;
+      DECLARE a INT ;
+      DECLARE b DATE ;
+      DECLARE cur1 CURSOR FOR 
+      SELECT 
+        emp_no,
+        hire_date 
+      FROM
+        employees 
+      WHERE first_name = 'Georgi' ;
+      DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1 ;
+      CALL writelogs (procedure_name, 0, '程序开始') ;
+      CALL writelogs (
+        procedure_name,
+        1,
+        '开始清除原有记录'
+      ) ;
+      DELETE 
+      FROM
+        tmp1 
+      WHERE emp_no IN 
+        (SELECT 
+          emp_no 
+        FROM
+          employees 
+        WHERE first_name = 'Georgi') ;
+      DELETE 
+      FROM
+        tmp2 
+      WHERE emp_no IN 
+        (SELECT 
+          emp_no 
+        FROM
+          employees 
+        WHERE first_name = 'Georgi') ;
+      CALL writelogs (
+        procedure_name,
+        2,
+        '结束清除原有记录'
+      ) ;
+      CALL writelogs (
+        procedure_name,
+        3,
+        '开始处理数据'
+      ) ;
+      OPEN cur1 ;
+      REPEAT
+        FETCH cur1 INTO a,
+        b ;
+        IF NOT done 
+        THEN IF hire_date < '1989-10-01' 
+        THEN 
+        INSERT INTO tmp1 (emp_no) 
+        VALUES
+          (vemp_no) ;
+        ELSE 
+        INSERT INTO tmp2 (emp_no) 
+        VALUES
+          (vemp_no) ;
+        END IF ;
+        END IF ;
+        UNTIL done 
+      END REPEAT ;
+      CALL writelogs (
+        procedure_name,
+        4,
+        '结束处理数据'
+      ) ;
+      CALL writelogs (procedure_name, 5, '关闭游标') ;
+      CLOSE cur1 ;
+      CALL writelogs (procedure_name, 6, '程序结束') ;
+    END //
+
+    DELIMITER ;
+

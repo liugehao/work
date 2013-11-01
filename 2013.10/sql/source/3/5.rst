@@ -1,0 +1,20 @@
+索引要使用的字段不要使用函数或者进行运算
+============================================================
+
+索引要使用的字段不要使用函数或者进行运算，如 field1 + 1 = field2、adddate(field1,…、CAST
+
+.. code-block:: mysql
+
+    EXPLAIN EXTENDED
+    SELECT 
+      (emp_no + 100) AS emp_no100,
+      birth_date,
+      CONCAT(first_name
+      ,last_name) AS fullname,
+      gender hire_date 
+    FROM
+      employees 
+
+
+运算方法，字符串连接，如无必要，在客户端中计算，连接。
+

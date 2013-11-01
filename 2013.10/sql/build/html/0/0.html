@@ -1,0 +1,129 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>设计原则 &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="../index.html" />
+    <link rel="next" title="任何语句使用前explain看执行计划是否用到索引" href="1.html" />
+    <link rel="prev" title="Welcome to sql教程’s documentation!" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="1.html" title="任何语句使用前explain看执行计划是否用到索引"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to sql教程’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>设计原则<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1.html">任何语句使用前explain看执行计划是否用到索引</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.html">不要从明细表查统计结果，定期统计插入到汇总表</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="2.html#id2">一般做法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.html#id3">使用汇总表</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="3.html">禁止使用SELECT *，必须指定字段名称，包括insert table后边加字段列表</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4.html">明细统计时，只统计编码，不要关联名称等冗余字段</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5.html">明细统计时，只统计编码，不要关联名称等冗余字段</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6.html">每个查询结果集使用的内存量不要超过256M，可以通过时间范围控制，如 RK BETWEEN A AND B，建议大表按可小时操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7.html">页面查询在10秒内要返回结果</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8.html">联合查询时，每个表必须加别名以提高SQL解析效率</a></li>
+<li class="toctree-l1"><a class="reference internal" href="9.html">语句中避免使用 GROUP BY, 可通过批量程序定期汇总</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to sql教程&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="1.html"
+                        title="next chapter">任何语句使用前explain看执行计划是否用到索引</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/0/0.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="1.html" title="任何语句使用前explain看执行计划是否用到索引"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to sql教程’s documentation!"
+             >previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

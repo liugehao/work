@@ -1,0 +1,159 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>避免使用 LIKE &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="../index.html" />
+    <link rel="up" title="查询技巧" href="0.html" />
+    <link rel="next" title="WHERE 多个OR条件不走一个索引时可通过 UNION" href="3.html" />
+    <link rel="prev" title="SQL语句不要太长" href="1.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="3.html" title="WHERE 多个OR条件不走一个索引时可通过 UNION"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="1.html" title="SQL语句不要太长"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" accesskey="U">查询技巧</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="like">
+<h1>避免使用 LIKE<a class="headerlink" href="#like" title="Permalink to this headline">¶</a></h1>
+<p>避免使用 LIKE，【lrsj like &#8220;2012-09-23%&#8221;】 可改为 【LRSJ BETWEEN &#8216;2012-09-23 00:00:00&#8217; AND &#8216;2012-09-23 23:59:59&#8217;】或者left,right函数</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">SELECT</span>
+  <span class="n">emp_no</span><span class="p">,</span>
+  <span class="n">first_name</span><span class="p">,</span>
+  <span class="n">last_name</span><span class="p">,</span>
+  <span class="n">hire_date</span>
+<span class="k">FROM</span>
+  <span class="n">employees</span>
+<span class="k">WHERE</span> <span class="n">hire_date</span> <span class="k">LIKE</span> <span class="s1">&#39;1989%&#39;</span> <span class="p">;</span>
+</pre></div>
+</div>
+<p>可以写为：</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">SELECT</span>
+  <span class="n">emp_no</span><span class="p">,</span>
+  <span class="n">first_name</span><span class="p">,</span>
+  <span class="n">last_name</span><span class="p">,</span>
+  <span class="n">hire_date</span>
+<span class="k">FROM</span>
+  <span class="n">employees</span>
+<span class="k">WHERE</span> <span class="n">hire_date</span> <span class="k">BETWEEN</span> <span class="s1">&#39;1989-01-01&#39;</span> <span class="k">AND</span> <span class="s1">&#39;1989-12-31&#39;</span> <span class="p">;</span>
+</pre></div>
+</div>
+<p><em>left 与like结果有出入：</em></p>
+<p>以下２条语句，like速度明显快于left函数.</p>
+<div class="highlight-mysql"><div class="highlight"><pre> <span class="k">SELECT</span>
+  <span class="n">emp_no</span><span class="p">,</span>
+  <span class="n">first_name</span><span class="p">,</span>
+  <span class="n">last_name</span><span class="p">,</span>
+  <span class="n">hire_date</span>
+<span class="k">FROM</span>
+  <span class="n">employees</span>
+<span class="k">WHERE</span> <span class="n">last_name</span> <span class="k">LIKE</span> <span class="s1">&#39;D%&#39;</span> <span class="k">LIMIT</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">;</span>
+
+
+ <span class="k">SELECT</span>
+  <span class="n">emp_no</span><span class="p">,</span>
+  <span class="n">first_name</span><span class="p">,</span>
+  <span class="n">last_name</span><span class="p">,</span>
+  <span class="n">hire_date</span>
+<span class="k">FROM</span>
+  <span class="n">employees</span>
+<span class="k">WHERE</span> <span class="k">LEFT</span><span class="p">(</span><span class="n">last_name</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;D&#39;</span> <span class="k">LIMIT</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="1.html"
+                        title="previous chapter">SQL语句不要太长</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="3.html"
+                        title="next chapter">WHERE 多个OR条件不走一个索引时可通过 UNION</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/6/2.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="3.html" title="WHERE 多个OR条件不走一个索引时可通过 UNION"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="1.html" title="SQL语句不要太长"
+             >previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" >查询技巧</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

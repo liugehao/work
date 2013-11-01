@@ -1,0 +1,44 @@
+{\rtf1\ansi\ansicpg936\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\fnil\fcharset134 STHeitiSC-Light;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 rhel5.7\'bb\'b7\'be\'b3\'cf\'c2\'a3\'ac\'cb\'c4\'ba\'cb\'d0\'e9\'c4\'e2\'bb\'fa\'a3\'ac4G\'c4\'da\'b4\'e6\
+\
+\'b0\'b2\'d7\'b0pycurl\'a3\'ac\
+yum install python-pycurl.x86_64\
+\
+\
+\'b0\'b2\'d7\'b0PHP\
+wget http://us1.php.net/get/php-5.5.5.tar.gz/from/cn2.php.net/mirror\
+tar zxf php-5.5.5.tar.gz \
+yum install libxml2-devel.x86_64\
+cd php-5.5.5\
+./configure\
+make -j 8\
+make install\
+\
+\'b0\'b2\'d7\'b0php\'b5\'c4curl\'c0\'a9\'d5\'b9\
+\
+cd php-5.5.5/ext/curl\
+phpize\
+./configure\
+make -j 4\
+make install\
+\
+\
+\'b2\'e2\'ca\'d4\'b7\'bd\'b7\'a8 \
+\'b0\'d1test.php\'b7\'c5\'d6\'c1\'cd\'f8\'d5\'beroot\'cf\'c2\'a3\'ac\'ca\'b9url http://127.0.0.1/test.php\'bf\'c9\'d2\'d4\'b7\'c3\'ce\'ca\'b5\'bd\'a1\'a3\
+\
+\'bf\'aa10\'b8\'f6\'bd\'f8\'b3\'cc\'cd\'ac\'ca\'b1\'b2\'e2\'ca\'d4\'a3\'ba\
+php curl_test.php & php curl_test.php & php curl_test.php & php curl_test.php & php curl_test.php & php curl_test.php & php curl_test.php & php curl_test.php & php curl_test.php & php curl_test.php & \
+\
+python curl_test.py & python curl_test.py & python curl_test.py & python curl_test.py & python curl_test.py & python curl_test.py & python curl_test.py & python curl_test.py & python curl_test.py & python curl_test.py & \
+\
+urllib2_test.py, socket_test.py\'b2\'e2\'ca\'d4\'b7\'bd\'b7\'a8\'cf\'e0\'cd\'ac\
+\'c3\'bf\'b8\'f6\'bd\'f8\'b3\'cc\'b7\'a2\'cb\'cd10000\'cc\'f5post\'cf\'fb\'cf\'a2\'a3\'ac\'b3\'cc\'d0\'f2\'bd\'e1\'ca\'f8\'ba\'f3\'b3\'f6\'cf\'d6\'b5\'c4\'c3\'eb\'ca\'fd\'b3\'fdpost\'b5\'c4\'d7\'dc\'ca\'fd\'c1\'bf\'a3\'ac\'bc\'b4\'c3\'bf\'c3\'eb\'b7\'a2\'cb\'cd\'b5\'c4\'cf\'fb\'cf\'a2\'ca\'fd\
+ \
+\
+\'b2\'e2\'ca\'d4\'bd\'e1\'b9\'fb\'a3\'ba\
+\'c3\'bf\'c3\'eb\'b4\'a6\'c0\'ed10000\'d7\'f3\'d3\'d2\'ca\'fd\'be\'dd\'a3\'ac}

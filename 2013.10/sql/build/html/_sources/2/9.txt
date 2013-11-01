@@ -1,0 +1,59 @@
+
+组合索引可以只使用第一个，或者前两个，或者前几个
+==============================================================
+
+组合索引可以只使用第一个，或者前两个，或者前几个，不能从第二个开始用，也不能跳着使用  
+
+索引使用从前缀开始，多字段索引到between或者<,>等以后字段不会使用,排序最好在索引中实现
+
+.. code-block:: mysql
+
+    EXPLAIN 
+    SELECT 
+      id,
+      cxxx_id,
+      gs_bm,
+      gdddsj,
+      gdlksj 
+    FROM
+      wdcx_tjd 
+    WHERE gs_bm = 543001 
+      AND xh = 1 
+.. image:: ../../images/3-2.png
+
+正确做法：
+
+.. code-block:: mysql
+
+    EXPLAIN 
+    SELECT 
+      id,
+      cxxx_id,
+      gs_bm,
+      gdddsj,
+      gdlksj 
+    FROM
+      wdcx_tjd 
+    WHERE cxxx_id = 9547 
+      AND xh = 1 
+
+.. image:: ../../images/3-3.png
+
+或者：
+
+.. code-block:: mysql
+
+    EXPLAIN 
+    SELECT 
+      id,
+      cxxx_id,
+      gs_bm,
+      gdddsj,
+      gdlksj 
+    FROM
+      wdcx_tjd 
+    WHERE cxxx_id = 9547 
+      AND gs_bm = 543001 
+      AND xh = 1 
+  
+.. image:: ../../images/3-4.png

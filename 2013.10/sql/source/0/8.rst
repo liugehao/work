@@ -1,0 +1,25 @@
+联合查询时，每个表必须加别名以提高SQL解析效率
+==========================================================================================
+
+如 SELECT T1.BM FROM GS T1 LEFT JOIN GSJJ T2 ON T1.BM=T2.BM
+
+.. code-block:: mysql
+
+    SELECT 
+      `title`
+    FROM
+      `titles`,
+      `employees` 
+    WHERE titles.`emp_no` = employees.`emp_no`  
+
+正确做法：
+
+.. code-block:: mysql
+
+    SELECT 
+      t.`title`
+    FROM
+      `employees`.`titles` AS t,
+      `employees` AS e 
+    WHERE e.`emp_no` = t.`emp_no` 
+    GROUP BY t.`emp_no` 

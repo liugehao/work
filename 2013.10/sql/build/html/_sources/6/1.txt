@@ -1,0 +1,30 @@
+SQL语句不要太长
+==================================================
+
+SQL语句不要太长，如果 IN 列表太多必须改为 LEFT JOIN , 且关联字段主键索引
+
+.. code-block:: mysql
+
+    SELECT emp_no
+      FROM
+        tmp2 
+      WHERE emp_no IN 
+        (SELECT 
+          emp_no 
+        FROM
+          employees 
+        WHERE first_name = 'Georgi') ;
+ 
+可以写为：
+
+.. code-block:: mysql
+   
+    SELECT 
+      t.emp_no 
+    FROM
+      tmp2 AS t 
+      INNER JOIN employees e 
+        ON t.emp_no = e.emp_no 
+    WHERE e.first_name = 'Georgi') ;
+
+

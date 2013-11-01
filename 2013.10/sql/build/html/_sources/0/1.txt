@@ -1,0 +1,28 @@
+
+任何语句使用前explain看执行计划是否用到索引
+========================================
+
+.. code-block:: mysql
+
+    EXPLAIN 
+    SELECT 
+      id,
+      cxbm,
+      cxmc,
+      sfd,
+      mdd 
+    FROM
+      cxxx 
+    WHERE mdd = 210000
+
+
+    EXPLAIN 
+    SELECT 
+      id,
+      cxbm,
+      cxmc,
+      sfd,
+      mdd 
+    FROM
+      cxxx 
+    WHERE mdd = '210000' 

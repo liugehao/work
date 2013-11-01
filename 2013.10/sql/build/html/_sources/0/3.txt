@@ -1,0 +1,26 @@
+禁止使用SELECT \*，必须指定字段名称，包括insert table后边加字段列表
+========================================================================================================================
+
+.. code-block:: mysql
+
+    SELECT 
+      * 
+    FROM
+      xcbd 
+    WHERE cxxx_id = 3 
+
+正确做法：
+
+.. code-block:: mysql
+
+    SELECT 
+      id,
+      clxx_id,
+      cxxx_id,
+      qsd,
+      zdd 
+    FROM
+      xcbd 
+    WHERE cxxx_id = 3 
+
+

@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all) &mdash; sql教程 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sql教程 1.0 documentation" href="../index.html" />
+    <link rel="up" title="索引使用" href="0.html" />
+    <link rel="next" title="每个表索引越少越好" href="2.html" />
+    <link rel="prev" title="索引使用" href="0.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="2.html" title="每个表索引越少越好"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="0.html" title="索引使用"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" accesskey="U">索引使用</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="merge-index-a-1-or-b-2-ab-union-all">
+<h1>一般情况下，一次查询只会用到一个索引 (特定情况出现merge index的情况,如下可能出现(a=1 or b=2)会合并a和b的索引,或者使用union all)<a class="headerlink" href="#merge-index-a-1-or-b-2-ab-union-all" title="Permalink to this headline">¶</a></h1>
+<p>explain mysql测试合并索引</p>
+<p>建立索引:</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">emplyees_firstname</span>
+<span class="k">ON</span> <span class="nf">employees</span> <span class="p">(</span><span class="n">first_name</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">emplyees_lastname</span>
+<span class="k">ON</span> <span class="nf">employees</span> <span class="p">(</span><span class="n">last_name</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>a=1 or b=2 情况下：</p>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">EXPLAIN</span>
+<span class="k">SELECT</span>
+  <span class="n">emp_no</span><span class="p">,</span>
+  <span class="n">birth_date</span><span class="p">,</span>
+  <span class="n">first_name</span><span class="p">,</span>
+  <span class="n">last_name</span><span class="p">,</span>
+  <span class="n">gender</span> <span class="n">hire_date</span>
+<span class="k">FROM</span>
+  <span class="n">employees</span>
+<span class="k">WHERE</span> <span class="n">first_name</span> <span class="o">=</span> <span class="s1">&#39;Georgi&#39;</span>
+  <span class="k">OR</span> <span class="n">last_name</span> <span class="o">=</span> <span class="s1">&#39;Simmel&#39;</span> <span class="p">;</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="2%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="16%" />
+<col width="17%" />
+<col width="4%" />
+<col width="2%" />
+<col width="3%" />
+<col width="5%" />
+<col width="31%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">id</th>
+<th class="head">select_type</th>
+<th class="head">table</th>
+<th class="head">type</th>
+<th class="head">possible_keys</th>
+<th class="head">key</th>
+<th class="head">key_len</th>
+<th class="head">ref</th>
+<th class="head">rows</th>
+<th class="head">filtered</th>
+<th class="head">Extra</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>SIMPLE</td>
+<td>employees</td>
+<td>index_merge</td>
+<td>emplyees_firstname,last_name</td>
+<td>emplyees_firstname,last_name</td>
+<td>16,18</td>
+<td>&nbsp;</td>
+<td>420</td>
+<td>100.00</td>
+<td>Using union(emplyees_firstname,last_name); Using where</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-mysql"><pre>EXPLAIN EXTENDED
+SELECT
+  emp_no,
+  birth_date,
+  first_name,
+  last_name,
+  gender hire_date
+FROM
+  employees
+WHERE first_name ＝  'Georgi'
+UNION
+ALL
+SELECT
+  emp_no,
+  birth_date,
+  first_name,
+  last_name,
+  gender hire_date
+FROM
+  employees
+WHERE last_name = 'Simmel' ;</pre>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="3%" />
+<col width="11%" />
+<col width="10%" />
+<col width="4%" />
+<col width="18%" />
+<col width="17%" />
+<col width="9%" />
+<col width="5%" />
+<col width="4%" />
+<col width="7%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">id</th>
+<th class="head">select_type</th>
+<th class="head">table</th>
+<th class="head">type</th>
+<th class="head">possible_keys</th>
+<th class="head">key</th>
+<th class="head">key_len</th>
+<th class="head">ref</th>
+<th class="head">rows</th>
+<th class="head">filtered</th>
+<th class="head">Extra</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>PRIMARY</td>
+<td>employees</td>
+<td>ref</td>
+<td>emplyees_firstname</td>
+<td>emplyees_firstname</td>
+<td>16</td>
+<td>const</td>
+<td>253</td>
+<td>100.00</td>
+<td>Using where</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>UNION</td>
+<td>employees</td>
+<td>ref</td>
+<td>last_name</td>
+<td>last_name</td>
+<td>18</td>
+<td>const</td>
+<td>167</td>
+<td>100.00</td>
+<td>Using where</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>in与union:当条件参数为大量的时候，union all 明显慢于in</li>
+</ul>
+<p>30W数据:</p>
+<ul class="simple">
+<li>无索引情况下：执行100条语句union耗时0.795秒，用in条件0.001秒</li>
+<li>有索引情况下： 执行100条语句union耗时0.005秒，用in条件0.002秒</li>
+</ul>
+<p>90W数据</p>
+<ul class="simple">
+<li>有索引情况下： 执行100条语句union耗时0.028秒，用in条件0.000秒</li>
+</ul>
+<div class="highlight-mysql"><div class="highlight"><pre><span class="k">SELECT</span>
+  <span class="n">emp_no</span><span class="p">,</span>
+  <span class="n">birth_date</span><span class="p">,</span>
+  <span class="n">first_name</span><span class="p">,</span>
+  <span class="n">last_name</span><span class="p">,</span>
+  <span class="n">gender</span> <span class="n">hire_date</span>
+<span class="k">FROM</span>
+  <span class="n">employees</span>
+<span class="k">WHERE</span> <span class="n">first_name</span> <span class="k">IN</span> <span class="p">(</span>
+    <span class="s1">&#39;Georgi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Bezalel&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Parto&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Chirstian&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Kyoichi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Anneke&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Tzvetan&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Saniya&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Sumant&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Duangkaew&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Mary&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Patricio&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Eberhardt&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Berni&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Guoxiang&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Kazuhito&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Cristinel&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Kazuhide&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Lillian&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Mayuko&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Ramzi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Shahaf&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Bojan&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Suzette&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Prasadram&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Yongqiao&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Divier&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Domenick&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Otmar&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Elvis&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Karsten&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Jeong&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Arif&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Bader&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Alain&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Adamantios&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Pradeep&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Huan&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Alejandro&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Weiyi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Uri&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Magy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Yishay&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Mingsen&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Moss&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Lucien&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Zvonko&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Florian&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Basil&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Yinghua&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Hidefumi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Heping&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Sanjiv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Mayumi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Georgy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Brendon&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Ebbe&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Berhard&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Breannda&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Tse&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Anoosh&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Gino&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Udi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Satosi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Kwee&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Claudi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Charlene&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Margareta&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Reuven&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Hisao&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Hironoby&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Shir&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Mokhtar&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Gao&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Erez&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Mona&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Danel&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Kshitij&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Premal&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Zhongwei&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Parviz&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Vishv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Tuval&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Kenroku&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Somnath&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Xinglin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Jungsoon&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Sudharsan&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Kendra&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Amabile&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Valdiodio&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Sailaja&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Arumugam&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Hilari&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Jayson&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Remzi&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Sreekrishna&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Valter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Hironobu&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Perla&#39;</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+<p>无索引时扫描表１００次</p>
+<img alt="../_images/3-1.png" src="../_images/3-1.png" />
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="0.html"
+                        title="previous chapter">索引使用</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="2.html"
+                        title="next chapter">每个表索引越少越好</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/2/1.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="2.html" title="每个表索引越少越好"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="0.html" title="索引使用"
+             >previous</a> |</li>
+        <li><a href="../index.html">sql教程 1.0 documentation</a> &raquo;</li>
+          <li><a href="0.html" >索引使用</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, 李培吉.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

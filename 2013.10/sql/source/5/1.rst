@@ -1,0 +1,21 @@
+远程表结构要与原始表一致，尤其是索引
+==================================================
+
+远程表结构要与原始表一致，尤其是索引
+
+在另一台机器建立远程表：
+
+.. code-block:: mysql
+
+    CREATE TABLE `employees` (
+      `emp_no` int(11) NOT NULL,
+      `birth_date` date NOT NULL,
+      `first_name` varchar(14) NOT NULL,
+      `last_name` varchar(16) NOT NULL,
+      `gender` enum('M','F') NOT NULL,
+      `hire_date` date NOT NULL,
+      `var1` varchar(6) DEFAULT NULL,
+      PRIMARY KEY (`emp_no`),
+      KEY `var1` (`var1`)
+    ) ENGINE=FEDERATED DEFAULT CHARSET=latin1
+    CONNECTION='mysql://user:password@host:port/employess/employees';

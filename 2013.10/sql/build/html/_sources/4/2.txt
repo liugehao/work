@@ -1,0 +1,193 @@
+在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试
+============================================================================================
+
+在存储过程的关键步骤开始和结束都要记录信息到日志表，用于监控和调试
+
+建立日志表：
+
+.. code-block:: mysql
+
+    CREATE TABLE `mylogs` (
+      `produce_name` CHAR(20) DEFAULT NULL,
+      `dt` DATETIME DEFAULT NULL,
+      `step` SMALLINT(6) DEFAULT NULL,
+      `msg` VARCHAR(100) DEFAULT NULL,
+      KEY `produce_name` (`produce_name`,`dt`)
+    ) 
+
+    DELIMITER //
+    CREATE PROCEDURE `curdemo` () 
+    BEGIN
+      INSERT INTO mylogs (`produce_name`, `dt`, `step`, `msg`) 
+      VALUES
+        (
+          procedure_name,
+          NOW(),
+          0,
+          '程序开始'
+        ) ;
+      DECLARE done INT DEFAULT 0 ;
+      DECLARE procedure_name CHAR(20) ;
+      SET procedure_name = 'curdemo' ;
+      DECLARE a INT ;
+      DECLARE b DATE ;
+      DECLARE cur1 CURSOR FOR 
+      SELECT 
+        emp_no,
+        hire_date 
+      FROM
+        employees 
+      WHERE first_name = 'Georgi' ;
+      DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1 ;
+      INSERT INTO mylogs (`produce_name`, `dt`, `step`, `msg`) 
+      VALUES
+        (
+          procedure_name,
+          NOW(),
+          1,
+          '开始打开游标'
+        ) ;
+      OPEN cur1 ;
+      INSERT INTO mylogs (`produce_name`, `dt`, `step`, `msg`) 
+      VALUES
+        (
+          procedure_name,
+          NOW(),
+          2,
+          '结束打开游标'
+        ) ;
+      INSERT INTO mylogs (`produce_name`, `dt`, `step`, `msg`) 
+      VALUES
+        (
+          procedure_name,
+          NOW(),
+          3,
+          '开始处理数据'
+        ) ;
+      REPEAT
+        FETCH cur1 INTO a,
+        b ;
+        IF NOT done 
+        THEN IF hire_date < '1989-10-01' 
+        THEN 
+        INSERT INTO tmp1 (emp_no) 
+        VALUES
+          (vemp_no) ;
+        ELSE 
+        INSERT INTO tmp2 (emp_no) 
+        VALUES
+          (vemp_no) END IF ;
+        END IF ;
+        UNTIL done 
+      END REPEAT ;
+      INSERT INTO mylogs (`produce_name`, `dt`, `step`, `msg`) 
+      VALUES
+        (
+          procedure_name,
+          NOW(),
+          4,
+          '结束处理数据'
+        ) ;
+      INSERT INTO mylogs (`produce_name`, `dt`, `step`, `msg`) 
+      VALUES
+        (
+          procedure_name,
+          NOW(),
+          5,
+          '关闭游标'
+        ) ;
+      CLOSE cur1 ;
+      INSERT INTO mylogs (`produce_name`, `dt`, `step`, `msg`) 
+      VALUES
+        (
+          procedure_name,
+          NOW(),
+          6,
+          '程序结束'
+        ) ;
+    END //
+
+    DELIMITER ;
+
+*INSERT INTO mylogs 可以写一个存储过程，以增加可读性。*
+
+.. code-block:: mysql
+
+    DELIMITER //
+    CREATE PROCEDURE `writelogs` (
+      IN produce_name CHAR(20),
+      IN step SMALLINT,
+      IN msg CHAR(100)
+    ) 
+    BEGIN
+      INSERT INTO mylogs (`produce_name`, `dt`, `step`, `msg`) 
+      VALUES
+        (produce_name, NOW(), step, msg) ;
+    END //
+    DELIMITER ;
+
+
+程序改写后：
+
+.. code-block:: mysql
+
+    DELIMITER //
+    CREATE PROCEDURE `curdemo` () 
+    BEGIN
+      DECLARE procedure_name CHAR(20) DEFAULT 'curdemo' ;
+      DECLARE done INT DEFAULT 0 ;
+      DECLARE a INT ;
+      DECLARE b DATE ;
+      DECLARE cur1 CURSOR FOR 
+      SELECT 
+        emp_no,
+        hire_date 
+      FROM
+        employees 
+      WHERE first_name = 'Georgi' ;
+      DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1 ;
+      CALL writelogs (procedure_name, 0, '程序开始') ;
+      CALL writelogs (
+        procedure_name,
+        1,
+        '开始打开游标'
+      ) ;
+      OPEN cur1 ;
+      CALL writelogs (
+        procedure_name,
+        2,
+        '结束打开游标'
+      ) ;
+      CALL writelogs (
+        procedure_name,
+        3,
+        '开始处理数据'
+      ) ;
+      REPEAT
+        FETCH cur1 INTO a,
+        b ;
+        IF NOT done 
+        THEN IF hire_date < '1989-10-01' 
+        THEN 
+        INSERT INTO tmp1 (emp_no) 
+        VALUES
+          (vemp_no) ;
+        ELSE 
+        INSERT INTO tmp2 (emp_no) 
+        VALUES
+          (vemp_no) ;
+        END IF ;
+        END IF ;
+        UNTIL done 
+      END REPEAT ;
+      CALL writelogs (
+        procedure_name,
+        4,
+        '结束处理数据'
+      ) ;
+      CALL writelogs (procedure_name, 5, '关闭游标') ;
+      CLOSE cur1 ;
+      CALL writelogs (procedure_name, 6, '程序结束') ;
+    END //
+
+    DELIMITER ;

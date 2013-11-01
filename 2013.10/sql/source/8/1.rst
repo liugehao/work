@@ -1,0 +1,40 @@
+innodb引擎,在过程结尾提交，避免过度commit
+==============================================================
+
+innodb引擎,在过程结尾提交，避免过度commit
+
+.. code-block:: php
+
+    <?php
+    $conn = mysql_connect('localhost','root','root') or die ("数据连接错误!!!");
+    mysql_select_db('test',$conn);
+    mysql_query("set names 'GBK'"); //使用GBK中文编码;
+    //开始一个事务
+    mysql_query("BEGIN"); //或者mysql_query("START TRANSACTION");
+    $sql = "INSERT INTO `employees`.`employees` (
+      `emp_no`,
+      `birth_date`,
+      `first_name`,
+      `last_name`,
+      `hire_date`,
+    ) 
+    VALUES
+      (
+        99999,
+        '1989-01-01,
+        'first_name',
+        'last_name',
+         '1989-01-01'
+      ) ;";
+    $sql2 = "delete from employees where emp_no= -1";//这条我故意写错
+    $res = mysql_query($sql);
+    $res1 = mysql_query($sql2); 
+    if($res && $res1){
+    mysql_query("COMMIT");
+    echo '提交成功。';
+    }else{
+    mysql_query("ROLLBACK");
+    echo '数据回滚。';
+    }
+    mysql_query("END"); 
+

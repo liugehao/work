@@ -1,0 +1,30 @@
+尽量少用 TEXT、BLOB 等专有类型 
+===============================================
+
+用单独的表来保存TEXT列内容
+
+.. code-block:: mysql
+
+    CREATE TABLE titles (
+      id INT PRIMARY KEY,
+      title VARCHAR (50),
+      db_time TIMESTAMP,
+      author INT
+    );
+    
+    CREATE TABLE contents (
+      title_id INT PRIMARY KEY,
+      content TEXT
+    );
+
+用文件链接来保存TEXT列内容,content列保存文件path
+
+.. code-block:: mysql
+
+    CREATE TABLE titles (
+      id INT PRIMARY KEY,
+      title VARCHAR (50),
+      content VARCHAR(60),
+      db_time TIMESTAMP,
+      author INT
+    )
