@@ -34,13 +34,24 @@ def proc(row):
 
 res = {}
 res['num']= re.compile('\d*?-*?\d*?-\d*.*$')
-res['num1'] = re.compile(u'\d*?-*?\d*?[号栋幢室].*$')
-res['rep'] = re.compile(u'(大[楼厦院]|公司|学校|分校|宿舍|[a-zA-Z0-9]{1,3}座).*$')
+res['num1'] = re.compile(u'\d*?-*?\d*?([号栋幢室楼]|单元).*$')
 
-def procsa(tmp):
-    tmp = res['num'].sub('',tmp)
+
+res['rep1'] = re.compile(u'(家园|小区|公司|市场|花园|苑|广场|酒店|大[楼厦院]|公司|学校|分校|宿舍).*$' #,lambda x :x.group(1), u'望京南湖中园一区金色慧谷家园119号楼3单元302')
+res['rep2'] = re.compile(u'\d*号?院?')
+
+
+#re.sub(u'(\d*?-*?\d*?号*?)(.*(家园|小区|公司|市场|花园|苑|广场|酒店)).*$',lambda x :x.group(2), u'望京西路50号院鹿港嘉苑7号楼505')
+
+def procsa(tmp1):
+    tmp = res['rep1'].sub(lambda x:x.group(2), tmp1)
+    if tmp != tmp1:
+        tmp = res['rep2'].sub('', tmp)
+        return tmp
+    
     tmp = res['num1'].sub('',tmp)
-    tmp = res['rep'].sub(lambda x:x.group(1), tmp)
+    tmp = res['num'].sub('',tmp)
+    
     return tmp
 
 #pc.execute("""CREATE TABLE ldb2
