@@ -22,6 +22,7 @@ def procs(strtmp, a, b=None):
             if strtmp.find(x) == 0:
                 return re.sub(r'^%s' % x, '', strtmp)
     return strtmp
+res = {}
 res['rep0'] = re.compile(u'(对面|门口|旁边|楼上).*$')
 res['rep1'] = re.compile(u'(.*?)\d*号(.*(博物馆|局|[一二三四五]期|分院|学院|大学|嘉园|家园|家属[区楼院]|银行|小区|公司|市场|中心|花园|苑|广场|酒店|大[楼厦院]|公司|学校|分校|宿舍|村屯|村庄|^村镇|^村街|^村路|庄村|^庄镇|^庄街|^庄路|庄屯|屯村|屯庄|^屯镇|村|庄|屯|幼儿园|小学|中学|号院|基地|政府|研究所|产业园|集团)).*$')
 
@@ -50,18 +51,26 @@ def procsa(tmp1):
     return tmp
 
 def procsb(tmp1):
-    return res['hao1'].sub(lambda x:x.group(1)+'^^^'+x.group(2) , hao0).split('^^^')
+    return res['hao1'].sub(lambda x:x.group(1)+u'^^^'+x.group(2) , tmp1).split(u'^^^')
 
 
 def proc(row):
-    tmp2 = row[1].decode('utf-8')
+    tmp2 = repnum(row[1].decode('utf-8'))
     tmp = procs(tmp2, prov1, prov2)
     tmp = procs(tmp, city1)
     tmp = procs(tmp, city2)
     tmp = procs(tmp, ctry )
-    tmp = procsa(tmp)
-    tmp1 = procsb(tmp)
-    print tmp2
+    tmpa = procsa(tmp)
+    tmpb = procsb(tmp)
+    print '0',tmp2
+    print '1', tmpa
+    if len(tmpb)== 2:
+        print '2',tmpb[0], tmpb[1]
+    else:
+        print '2', tmpb[0]
+    print '-' * 20
+    return
+    """
     if len(tmp1) >1:
         tmp1,tmp2 = tmp1
         if tmp != tmp1:
@@ -74,7 +83,8 @@ def proc(row):
             print '2',tmp1
     else:
         #tmp insert db
-        print tmp
+        print '1',tmp
+    """
     print '-' * 20
     return tmp
 
