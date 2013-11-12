@@ -32,7 +32,46 @@ def proc(row):
     print row[1],'|', tmp
     return tmp
 
+res = {}
+res['num']= re.compile('\d*?-*?\d*?-\d*.*$')
+res['num1'] = re.compile(u'\d*?-*?\d*?([号栋幢室楼]|单元).*$')
 
+
+res['rep1'] = re.compile(u'(路|街).*号(.*(家园|小区|公司|市场|花园|苑|广场|酒店|大[楼厦院]|公司|学校|分校|宿舍)).*$')
+
+res['rep2'] = re.compile(u'(家园|小区|公司|市场|花园|苑|广场|酒店|大[楼厦院]|公司|学校|分校|宿舍).*$'
+
+
+
+
+
+
+print re.sub(u'(家园|小区|公司|市场|花园|苑|广场|酒店|大[楼厦院]|公司|学校|分校|宿舍).*$' ,lambda x :x.group(1), u'望京南湖中园一区金色慧谷家园119号楼3单元302')
+
+print re.sub(u'(路|街).*号(.*(家园|小区|公司|市场|花园|苑|广场|酒店|大[楼厦院]|公司|学校|分校|宿舍)).*$' ,lambda x :x.group(1)+x.group(2), u'凌江东路6-13号楼6单元6号银河湾小区')
+
+
+
+def procsa(tmp1):
+    tmp = res['rep1'].sub(lambda x:x.group(1)+x.group(2), tmp1)
+    if tmp != tmp1:
+        return tmp
+    tmp = res['rep2'].sub(lambda x:x.group(1), tmp1)
+    if tmp !=tmp1:
+        return tmp
+    
+    tmp = res['num1'].sub('',tmp)
+    tmp = res['num'].sub('',tmp)
+    
+    return tmp
+
+#pc.execute("""CREATE TABLE ldb2
+#(
+#  id serial NOT NULL,
+#  ctry integer,
+#  addr character varying(600),
+#  comp integer
+#)""")
 #pconn.commit()
 
 pc.execute("""select prov_coding,
