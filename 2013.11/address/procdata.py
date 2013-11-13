@@ -101,9 +101,9 @@ pc.execute("""select prov_coding,
 prov1 = []
 prov2 = []
 for row in pc.fetchall():
-    prov1.append(row[1])
+    prov1.append(row[1].decode('utf-8'))
     try:
-        prov2.append(row[1].replace(u'省','').replace(u'市','').replace(u'自治区',''))
+        prov2.append(row[1].decode('utf-8').replace(u'省','').replace(u'市','').replace(u'自治区',''))
     except:
         print 'error:1:', row[1]
 
@@ -112,16 +112,16 @@ pc.execute("""select city_name
 city1 = []
 city2 = []
 for row in pc.fetchall():
-    city1.append(row[0])
+    city1.append(row[0].decode('utf-8'))
     if row[0] not in ['朝阳市']:
-        city2.append(row[0].replace(u'','市').replace(u'县',''))
+        city2.append(row[0].decode('utf-8').replace(u'','市').replace(u'县',''))
 
 ctry = []
 
 pc.execute("""select ctry_name
     from ctry""")
 for row in pc.fetchall():
-    ctry.append(row[0])
+    ctry.append(row[0].decode('utf-8'))
 
 pc.execute("""select count(1) from ldb1""")
 num, = pc.fetchone()
