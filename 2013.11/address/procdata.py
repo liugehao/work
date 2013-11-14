@@ -4,11 +4,13 @@
 import MySQLdb, psycopg2
 import sys
 import re
+from math import ceil
 reload(sys)
 sys.setdefaultencoding('utf-8')
 from num import getResultForDigit
 
 pconn = psycopg2.connect(host='172.16.147.133', user='postgres', password='l', database='address')
+#pconn.autocommit = True
 pconn.set_client_encoding('utf-8')
 pcw = pconn.cursor()
 pc = pconn.cursor()
@@ -66,26 +68,31 @@ def proc(row):
     tmp = procs(tmp2, prov1, prov2)
     tmp = procs(tmp, city1, city2)
     tmp2 = procs(tmp, ctry )
-    tmpa = procsa(tmp)
+    tmpa = procsa(tmp).replace('-','')
     tmpb = procsb(tmp)
     try:
-        pcw.execute(sql_ldb2, row[0], tmpa, row[2])
+        pcw.execute(sql_ldb2, (row[0], tmpa, row[2]))
         #rowid = pcw.fetchone()[0]
-    except:
+    except Exception, e:
+        print e
         pconn.rollback()
         print '1',row[0], row[1], row[2]
-
+    else:
+        pconn.commit()
+    
     
     if len(tmpb)== 2:
         try:
-            pcw.execute(sql_ldb2, row[0], tmpb[0], 0)
+            pcw.execute(sql_ldb2, (row[0], tmpb[0], 0))
             rowid = pcw.fetchone()[0]
-            pcw.execute(sql_ldb2_num, rowid, tmpb[1], comp)
-        else:
+            pcw.execute(sql_ldb2_num, (rowid, tmpb[1], row[2]))
+        except Exception, e:
+            print e
             print '2', tmpb
+            pconn.rollback
+        else:
+            pconn.commit()
 
-    print '-' * 20
-    return
     """
     if len(tmp1) >1:
         tmp1,tmp2 = tmp1
@@ -101,11 +108,8 @@ def proc(row):
         #tmp insert db
         print '1',tmp
     """
-    print '-' * 20
-    return tmp
 
 
-#pconn.commit()
 
 pc.execute("""select prov_coding,
         prov_name
@@ -139,7 +143,7 @@ for row in pc.fetchall():
 pc.execute("""select count(1) from ldb1""")
 num, = pc.fetchone()
 pagesize = 10000.0
-for i in range(2): #range(int(ceil(num/pagesize))):
+for i in range(int(ceil(num/pagesize))):
     pc.execute("""select ctry, 
         addr, 
         comp 
