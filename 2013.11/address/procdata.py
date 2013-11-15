@@ -58,19 +58,32 @@ def procsb(tmp1):
     return res['hao2'].sub(lambda x:x.group(1)+u'^^^'+x.group(2) , tmp1).split(u'^^^')
 
 
+sql_ldb2 = "insert into ldb2 (ctry,addr,comp) values (%s, %s, %s) returning id"
+sql_ldb2_num = "insert into ldb2_num (id, nums, comp) values (%s, %s, %s)"
+
 def proc(row):
     tmp2 = repnum(row[1].decode('utf-8')).replace(' ','').replace(' ', '' )
     tmp = procs(tmp2, prov1, prov2)
     tmp = procs(tmp, city1, city2)
-    tmp = procs(tmp, ctry )
+    tmp2 = procs(tmp, ctry )
     tmpa = procsa(tmp)
     tmpb = procsb(tmp)
-    print '0',tmp2
-    print '1', tmpa
+    try:
+        pcw.execute(sql_ldb2, row[0], tmpa, row[2])
+        #rowid = pcw.fetchone()[0]
+    except:
+        pconn.rollback()
+        print '1',row[0], row[1], row[2]
+
+    
     if len(tmpb)== 2:
-        print '2',tmpb[0], tmpb[1]
-    else:
-        print '2', tmpb[0]
+        try:
+            pcw.execute(sql_ldb2, row[0], tmpb[0], 0)
+            rowid = pcw.fetchone()[0]
+            pcw.execute(sql_ldb2_num, rowid, tmpb[1], comp)
+        else:
+            print '2', tmpb
+
     print '-' * 20
     return
     """
