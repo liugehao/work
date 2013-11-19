@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 #coding=utf-8
-
 import MySQLdb, psycopg2
 import sys
+
+psycopg2.paramstyle='qmark'
+pconn = psycopg2.connect(host='172.16.147.133', user='postgres', password='l', database='address')
+pc = pconn.cursor()
 import re
 
 res = {}
 res['0'] = re.compile(u'(<.*?>|&gt;|&lt;|&nbsp;|【.*?】)')
 res['1'] = re.compile(u'[/、◇●,.;:，。；：\-|]')
 res['10'] = re.compile(u'全境派')
-mconn = MySQLdb.connect(charset = 'gbk', host="192.168.1.16", user='caiwu', passwd='cai_Report', db='ydserver')
-mc = mconn.cursor()
-mc.execute("select bm,mc,psfw,bpsfw from gsjj" )
+pc.execute("select bm,psfw,bpsfw,szd from wd" )
 
 
 def proc(m):
