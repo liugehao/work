@@ -36,10 +36,12 @@ def proc(row):
     tmp = procs(tmp2, prov1, prov2)
     tmp = procs(tmp, city1, city2)
     tmp2 = procs(tmp, ctry )
-    tmpa = procsa(tmp).replace('-','')
-    tmpb = procsb(tmp)
+    tmpa = procsa(tmp2)
+    tmpb = procsb(tmp2)
     try:
-        pcw.execute(sql_ldb2, (row[0], tmpa, row[2], tmpa))
+        pc.execute("select count(1) from psfw where bm=%s and dz=%s", (row[2], tmpa))
+        if pc.fetchone()[0] == 0:
+            pcw.execute(sql_ldb2, (row[0], tmpa, row[2], tmpa))
     except Exception, e:
         print e
         pconn.rollback()
@@ -50,7 +52,9 @@ def proc(row):
     
     if len(tmpb)== 2 and tmpb[1] != tmpa:
         try:
-            pcw.execute(sql_ldb2, (row[0], tmpb[0], row[2], tmpb[0]))
+            pc.execute("select count(1) from psfw where bm=%s and dz=%s", (row[2], tmpb[0]))
+            if pc.fetchone()[0] == 0:
+                pcw.execute(sql_ldb2, (row[0], tmpb[0], row[2], tmpb[0]))
         except Exception, e:
             print e
             print '2', tmpb
@@ -94,9 +98,11 @@ pc.execute("""select city_name
 city1 = []
 city2 = []
 for row in pc.fetchall():
-    city1.append(row[0].decode('utf-8'))
+    dz = row[0].decode('utf-8')
+    if len(dz) >1:
+    	city1.append(dz)
     if row[0] not in ['朝阳市']:
-        city2.append(row[0].decode('utf-8').replace(u'','市').replace(u'县',''))
+        city2.append(dz.replace(u'','市').replace(u'县',''))
 
 ctry = []
 
@@ -108,6 +114,6 @@ for row in pc.fetchall():
 pc.execute("""select ctry, 
         addr, 
         comp 
-        from ldb1 where comp=213300""")
+        from ldb1 where comp=213300 """)
 for row in pc.fetchall():
         proc(row)
