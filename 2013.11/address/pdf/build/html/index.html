@@ -1,0 +1,588 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to 中文地址地理编码方案’s documentation! &mdash; 中文地址地理编码方案 1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="中文地址地理编码方案 1 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">中文地址地理编码方案 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-s-documentation">
+<h1>Welcome to 中文地址地理编码方案&#8217;s documentation!<a class="headerlink" href="#welcome-to-s-documentation" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="crf">
+<h1>安装 CRF<a class="headerlink" href="#crf" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-bash"><div class="highlight"><pre>wget  http://crfpp.googlecode.com/files/CRF%2B%2B-0.58.tar.gz
+tar zxf CRF++-0.58.tar.gz
+<span class="nb">cd </span>CRF++-0.58
+./configure
+make
+make install
+<span class="nb">echo</span> <span class="s2">&quot;/usr/local/lib&quot;</span> &gt;&gt; /etc/ld.so.conf
+ldconfig
+</pre></div>
+</div>
+</div>
+<div class="section" id="posgresql">
+<h1>安装posgresql<a class="headerlink" href="#posgresql" title="Permalink to this headline">¶</a></h1>
+<p>debian:</p>
+<div class="highlight-bash"><div class="highlight"><pre>apt-get install postgresql-9.1 postgresql-contrib-9.1 postgresql-server-dev-9.1
+</pre></div>
+</div>
+</div>
+<div class="section" id="nlpbamboo">
+<h1>安装nlpbamboo<a class="headerlink" href="#nlpbamboo" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-bash"><div class="highlight"><pre>wget http://nlpbamboo.googlecode.com/files/nlpbamboo-1.1.2.tar.bz2
+tar jxf nlpbamboo-1.1.2.tar.bz2
+<span class="nb">cd </span>nlpbamboo-1.1.2
+mkdir build
+<span class="nb">cd </span>build
+cmake .. -DCMAKE_BUILD_TYPE<span class="o">=</span>release
+make all
+</pre></div>
+</div>
+<div class="section" id="bamboo">
+<h2>下载bamboo索引文件<a class="headerlink" href="#bamboo" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre>wget http://nlpbamboo.googlecode.com/files/index.tar.bz2
+tar jxf index.tar.bz2 -C /opt/bamboo
+</pre></div>
+</div>
+</div>
+<div class="section" id="postgresql">
+<h2>安装postgresql中文分词模块<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> /opt/bamboo/exts/postgres/pg_tokenize
+make <span class="o">&amp;&amp;</span> make install
+<span class="nb">cd</span> ../chinese_parse
+make <span class="o">&amp;&amp;</span> make install
+
+service postgresql restart
+su - postgres
+psql
+<span class="se">\i</span> /usr/share/postgresql/9.1/contrib/pg_tokenize.sql
+<span class="se">\i</span> /usr/share/postgresql/9.1/contrib/chinese_parser.sql
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id1">
+<h1>导入数据<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pythonmysql-postgresql">
+<h2>安装python的mysql postgresql模块<a class="headerlink" href="#pythonmysql-postgresql" title="Permalink to this headline">¶</a></h2>
+<p>debian:</p>
+<div class="highlight-bash"><div class="highlight"><pre>apt-get install python-mysql python-psycopg2
+</pre></div>
+</div>
+<p>importdata.py:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="c">#coding=utf-8</span>
+<span class="kn">import</span> <span class="nn">MySQLdb</span>
+<span class="p">,</span> <span class="n">psycopg2</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c">#psycopg2.paramstyle=&#39;qmark&#39; #psycopg2.paramstyle 失效 ，全用%s</span>
+<span class="n">pconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;172.16.147.133&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s">&#39;postgres&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&#39;l&#39;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s">&#39;address&#39;</span><span class="p">)</span>
+<span class="n">pc</span> <span class="o">=</span> <span class="n">pconn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="n">lens</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="s">&quot;insert into </span><span class="si">%s</span><span class="s"> values (</span><span class="si">%s</span><span class="s">);&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;, </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">*</span> <span class="n">lens</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span> <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">pc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">mconn</span> <span class="o">=</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">charset</span> <span class="o">=</span> <span class="s">&#39;gbk&#39;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s">&quot;192.168.1.16&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s">&#39;caiwu&#39;</span><span class="p">,</span> <span class="n">passwd</span><span class="o">=</span><span class="s">&#39;cai_xxxx&#39;</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="s">&#39;exp_address&#39;</span><span class="p">)</span>
+    <span class="n">mc</span> <span class="o">=</span> <span class="n">mconn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">mc</span><span class="o">.</span><span class="n">arraysize</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="n">mc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;select * from </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">table</span><span class="p">)</span>
+    <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">fetchmany</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">break</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+    <span class="n">pconn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>使用方法：</p>
+<div class="highlight-bash"><div class="highlight"><pre>python importdata.py 表名
+</pre></div>
+</div>
+<p>数据整理：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">ldb1</span>
+<span class="p">(</span>
+<span class="n">crty</span> <span class="nb">integer</span><span class="p">,</span>
+<span class="n">addr</span> <span class="nb">character</span> <span class="nb">varying</span><span class="p">(</span><span class="mi">600</span><span class="p">),</span>
+<span class="n">comp</span> <span class="nb">integer</span>
+<span class="p">)</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">lab1</span> <span class="k">values</span>
+<span class="k">select</span>
+    <span class="n">recv_ctry</span> <span class="nb">integer</span><span class="p">,</span>
+    <span class="n">recv_addr</span> <span class="p">,</span>
+    <span class="n">entry_comp</span>
+<span class="k">from</span> <span class="n">ldb</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">recv_ctry</span> <span class="nb">integer</span><span class="p">,</span>
+    <span class="n">recv_addr</span> <span class="p">,</span>
+    <span class="n">entry_comp</span>
+</pre></div>
+</div>
+<p>删除空数据：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">delete</span> <span class="k">from</span> <span class="n">ldb1</span>
+<span class="k">where</span> <span class="n">recv_ctry</span> <span class="o">=</span><span class="mi">0</span>
+    <span class="k">or</span> <span class="n">recv_addr</span> <span class="k">is</span> <span class="k">null</span>
+    <span class="k">or</span> <span class="n">entry_comp</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id2">
+<h1>测试步骤<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-sql"><pre>CREATE TABLE wd
+(
+    bm integer NOT NULL,
+    sheng integer,
+    shi integer,
+    szd integer,
+    psfw text,
+    bpsfw text,
+    mc character varying(100),
+    CONSTRAINT wd_pkey PRIMARY KEY (bm)
+);
+
+CREATE TABLE psfw
+(
+    id integer NOT NULL DEFAULT nextval('areas_id_seq'::regclass),
+    bm integer,
+    dz character varying(80),
+    szd integer,
+    pslb integer, -- 1全送排除 2全不送排除 3送 4不送
+    CONSTRAINT areas_pkey PRIMARY KEY (id)
+)；
+CREATE INDEX psfw_dz_idx
+    ON psfw
+    USING btree
+    (dz COLLATE pg_catalog."default");
+
+
+CREATE TABLE psfw_lu
+(
+    id integer NOT NULL DEFAULT nextval('roadnums_id_seq'::regclass),
+    psfw_id integer,
+    xiao integer,
+    da integer,
+    dsh integer, -- 0 不区分单双号 1 单号 2双号
+    CONSTRAINT roadnums_pkey PRIMARY KEY (id)
+)
+CREATE INDEX psfw_lu_xiao_da_idx
+    ON psfw_lu
+    USING btree
+    (xiao, da);</pre>
+</div>
+<p>psfw表存储szd-区县 dz-地址 pslb 类别 dzidx测试索引列</p>
+<p>psfw_lu 表为 psfw子表，当psfw表中dz为路且派送或者不派送范围不为全路段时，在</p>
+<p>psfw_lu表中记录门牌号码，xiao起始号码 da终止号码 ，dsh，标记奇偶数号码</p>
+<p>用imdata1.py把mysql gsjj表导入到pgsqldb中</p>
+<p>用addip.py处理pgsqldb表，数据进psfw表</p>
+<p>然后，增加一个tsquery列，做全文索引查询用：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">psfw</span> <span class="k">ADD</span> <span class="k">COLUMN</span> <span class="n">dzidx</span> <span class="n">tsquery</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">psfw_dzidx_idx</span>
+    <span class="k">ON</span> <span class="n">psfw</span>
+    <span class="k">USING</span> <span class="n">gist</span>
+    <span class="p">(</span><span class="n">dzidx</span><span class="p">);</span>
+<span class="k">update</span> <span class="n">psfw</span> <span class="k">set</span> <span class="n">dzidx</span><span class="o">=</span><span class="n">to_tsquery</span><span class="p">(</span><span class="s1">&#39;chinesecfg&#39;</span><span class="p">,</span><span class="n">dz</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>由于测试数据不规范，只进行bm=213300 szd=320481的公司进行测试，从ldb表中处理路、小区数据进入psfw psfw_lu 表，然后 用ldb表中数据进行测试</p>
+<p>用procdata1.py 处理ldb表中bm=213300数据进入psfw .</p>
+<p>更新213300派件网点所在地为999169，测试用（由于导入数据不准）</p>
+<blockquote>
+<div>update psfw set szd =999169 where bm=213300</div></blockquote>
+<p>建立联合索引</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">psfw_szd_dzidx_idx</span>
+<span class="k">ON</span> <span class="n">psfw</span>
+<span class="k">USING</span> <span class="n">btree</span>
+<span class="p">(</span><span class="n">szd</span><span class="p">,</span> <span class="n">dzidx</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>查询语句，耗时10ms级</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">psfw</span> <span class="k">where</span> <span class="n">szd</span><span class="o">=</span><span class="mi">999169</span>  <span class="k">and</span> <span class="n">to_tsvector</span><span class="p">(</span><span class="s1">&#39;chinesecfg&#39;</span><span class="p">,</span><span class="s1">&#39;骆驼街道贵驷里洞桥村洞桥路60号&#39;</span><span class="p">)</span> <span class="o">@@</span> <span class="n">dzidx</span>
+</pre></div>
+</div>
+<p>查询门牌号 60</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">psfw</span> <span class="n">p</span> <span class="k">inner</span> <span class="k">join</span> <span class="n">psfw_lu</span> <span class="n">l</span>
+<span class="k">on</span> <span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="o">=</span><span class="n">l</span><span class="p">.</span><span class="n">psfw_id</span>
+<span class="k">where</span> <span class="n">p</span><span class="p">.</span><span class="n">szd</span><span class="o">=</span><span class="mi">999169</span>  <span class="k">and</span> <span class="n">to_tsvector</span><span class="p">(</span><span class="s1">&#39;chinesecfg&#39;</span><span class="p">,</span><span class="s1">&#39;骆驼街道贵驷里洞桥村洞桥路&#39;</span><span class="p">)</span> <span class="o">@@</span> <span class="n">p</span><span class="p">.</span><span class="n">dzidx</span>
+<span class="k">and</span> <span class="p">(</span><span class="mi">60</span> <span class="k">between</span> <span class="n">l</span><span class="p">.</span><span class="n">xiao</span> <span class="k">and</span> <span class="n">l</span><span class="p">.</span><span class="n">da</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>取出数据结果后，依据 psfw表pslb来判断是否派送。门牌号取法采用正则，见脚本test.py 方法procsb</p>
+<p>测试方法 ldb表中bm=213300任一记录 recv_addr列去psfw中查询。</p>
+<p>测试门牌号请插入以下数据至psfw_lu, 测试效率可加入更多数据，建立索引。:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">psfw_id</span><span class="p">;</span><span class="n">xiao</span><span class="p">;</span><span class="n">da</span><span class="p">;</span><span class="n">dsh</span>
+<span class="mi">820246</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="mi">100</span><span class="p">;</span><span class="mi">0</span>
+<span class="mi">820246</span><span class="p">;</span><span class="mi">101</span><span class="p">;</span><span class="mi">200</span><span class="p">;</span><span class="mi">1</span>
+<span class="mi">820246</span><span class="p">;</span><span class="mi">150</span><span class="p">;</span><span class="mi">300</span><span class="p">;</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>部分插入的测试地址:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="mi">213300</span><span class="p">;</span><span class="s">&quot;台州路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;光明路地税局&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;红星路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;粮食局&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;迎江路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;东渡路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;厦门高崎五组5043号&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;厦门高崎五组&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;仙岳路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;历历七里河小区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;董村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;香港中路132号院&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;南阁街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;河南师范大学&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;神路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;承天路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;荆东路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;柏林馨苑&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;解放东路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;禅禅禅湖景路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;禅禅季华五路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;潮汕路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;福田保税区南光紫荆苑&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;人民医院西药房&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;文昌路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;雀路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;柳邕路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;潭中西路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;鱼&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;一环路南二段&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;3&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;北京南锣鼓巷&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;十里堡镇&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;南大街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;东城地纬路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;中山东路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;附城村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;附城村西小区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;平阳路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;东风新村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;上海巨鹿路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;上海宝胜路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;麒麟街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;建宁路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;周庄&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;中联皇冠&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;滨湖经济开发区华谊路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;隐秀苑&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;维扬路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;花园岗街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;文三路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;柳汀街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;柯柯忠烈庙前&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;邮电路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;塘下镇陈宅村友谊西路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;瑞安嘉宝锦园H栋&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;下应街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;兴宁路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;环城北路东段A座2楼（梦神商务中心&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;环城北路东段&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;普陀山路宁波天宇光电科技有限公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;普陀山路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;骆驼街道贵驷里洞桥村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;骆驼街道贵驷里洞桥村洞桥路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;茗园1区包兴路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;茗园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;春江花城78号104室&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;春江花城&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;洞桥镇潘家耷村二桥曦世工艺品有限公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;梅墟街道社区卫生服务中心&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;高新区梅墟梅福园168101室&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;高新区梅墟梅福园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;科技园区竹泉路宁波乐星感应电子有限公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;科技园区竹泉路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;前童镇老市场&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;桃源中路财政局会计核算中心&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;桃源中路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;太平洋商业街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;北三环长池支路开达电器有限公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;北三环长池支路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;孙塘北路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;北定工业园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;龙港镇塑遍=编工业区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;新区街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;牛山北路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;石桥头镇石黄路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;熟镇街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;黎明工业区金堂鞋业有限公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;黎明工业区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;浙南农贸市场&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;浙南农贸市场2区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;县府大院&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;罗阳镇西大街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;虹桥镇幸福西路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;江诚大厦&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;江诚大厦A&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;石帆第二工业区信本服饰包装有限公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;乐成镇南马巷1号改水办&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;乐成镇南马巷&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;嘉善经济开发区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;中山西路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;嘉禾北京城23幢306&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;嘉禾北京城&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;金穗月亮湾52幢302室&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;金穗月亮湾&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;中环西路（文昌路口）颐高广场&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;中环西路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;新城街道档案局&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;惠民镇惠民派出所&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;姚庄&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;海盐河南西路（海盐城投集团&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;海盐河南西路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;农业综合开发区启二路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;海洲街道世纪花园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;海洲街道紫薇花园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;当湖镇当湖西路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;新华爱心高级中学&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;永丰路永丰西村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;职业中专高一15班（fantasticbaby创业社团）&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;职业中专高一&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;文华路桂花城银桂苑&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;百官工业园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;河西社区105幢1号&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;河西社区105幢&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;劳动路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;闻波兜31幢303室&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;闻波兜&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;龙溪北路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;莫干山镇集镇南路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;皇家湾名邸4号楼1单元402室&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;皇家湾名邸&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;雉城镇新塘村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;安电信局&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;袍江越东南路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;花园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;花园畈南区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;灵芝镇小观村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;绍兴文理学院&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;新建北路住宅4幢601室（近县前街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;新建北路住宅&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;绍柯桥万国中心&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;绍柯桥万国中心A座&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;浙江友谊路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;柳湖花园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;滨江小区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;滨江小区B幢&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;岩头镇岩四村九区（岩头小学&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;岩头镇岩四村九区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;兰江街道上叶村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;工人北路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;国际商贸城f区四楼19302店面&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;国际商贸城f区四楼&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;苏溪镇人民路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;江东金村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;江东金村F区6栋&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;上洪村东区群英路（麦杰进出口有限公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;上洪村东区群英路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;白云街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;白云街道鑫园路海德国际社区檀香5路7街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;横店镇江南路（浙江普洛得邦制药有限公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;横店镇江南路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;城南路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;巨化孔家一条街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;南市街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;国际商贸6565店&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;国际商贸&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;普陀公安局&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;沈家门东海西路17弄&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;沈家门街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;沈家门街道西大街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;高亭沿港中路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;黄岩东城开发区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;开发大道台州华胜汽车服务有很公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;开发大道&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;双江小区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;大麦屿兴港西路港行大楼&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;人民西路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;城西街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;太平街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;太平街道方城路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;白云花苑&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;城北11幢1单元201室&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;城北&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;人民医院泌尿科&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;洛河经济开发区长壁机械有限责任公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;蚌埠百货大楼&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;华光大道&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;曹市镇袁店二矿保卫科&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;谯谯富荣花园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;谯谯富荣花园A&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;谯谯光明东路中国人民财产保险公司分公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;谯谯光明东路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;谯谯毫州市国税局&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;门台工业园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;皖紫薇花园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;清流路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;天长东路置业花苑&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;交通局&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;解放四大街&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;中原路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;剑光城7号楼202室&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;剑光城&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;镜湖新村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;人民中路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;阜阳国贸商城四楼步步高学习机专柜&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;国贸商城四楼家电部步步高点读机柜组&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;淝河镇人民政府&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;望江东路合肥水泥研究设计院检测中心&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;望江东路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;金寨南路姚公庙东风新村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;马鞍山路中段中国联通合肥分公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;石塘路肥东锦弘中学&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;石塘路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;石塘路锦弘中学&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;高新区高新区高新区天波路天怡国际商务中心&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;巢湖中路中国银行&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;巢湖中路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;长江中路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;阜南路测绘大厦3楼申银万国证券公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;阜南路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;藕塘路与茨河路交叉口金荷苑&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;藕塘路与茨河路交叉口金荷苑小区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;濉溪路财富广场&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;濉溪路财富广场B座西楼&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;其它区其它区滨湖新区康园小区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;其它区其它区经济技术开发区芙蓉路安徽医科大学&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;其它区其它区新站区工业园&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;其它区其它区新站区工业园宝业集团安徽有限公司&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;创业大道丰乐加工包装中心&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;创业大道&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;合作化南路（原法院）稻香村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;合作化南路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;梅山路银保大厦人民银行合肥中心&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;梅山路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;祁门路安徽国贸大厦&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;祁门路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;长江东路银洁烟酒店&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;长江东路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;新站区站前路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;新站区站前路浙江商贸城C座&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;胜利路中环国际大厦&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;胜利路中环国际大厦A座&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;一路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;一路公交总站向北&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;花园路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;梅苑路国税局&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;梅苑路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;九龙岗肿瘤医院&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;柏园南村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;东方医院总院原矿三院急诊科&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;公安局&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;泉林村&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;蔡家岗街道社区卫生服务中心&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;第四人民医院山下门诊蔡家岗长途车站对面&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;徽山路中华职业学校&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;徽山路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;马马迎江路&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+<span class="mi">213300</span><span class="p">;</span><span class="s">&quot;马马马杨沫小区&quot;</span><span class="p">;</span><span class="mi">999169</span><span class="p">;</span><span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to 中文地址地理编码方案&#8217;s documentation!</a></li>
+<li><a class="reference internal" href="#crf">安装 CRF</a></li>
+<li><a class="reference internal" href="#posgresql">安装posgresql</a></li>
+<li><a class="reference internal" href="#nlpbamboo">安装nlpbamboo</a><ul>
+<li><a class="reference internal" href="#bamboo">下载bamboo索引文件</a></li>
+<li><a class="reference internal" href="#postgresql">安装postgresql中文分词模块</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id1">导入数据</a><ul>
+<li><a class="reference internal" href="#pythonmysql-postgresql">安装python的mysql postgresql模块</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">测试步骤</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">中文地址地理编码方案 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, liuyou.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

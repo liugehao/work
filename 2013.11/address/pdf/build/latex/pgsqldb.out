@@ -1,0 +1,8 @@
+\BOOKMARK [0][-]{chapter.1}{安装 CRF}{}% 1
+\BOOKMARK [0][-]{chapter.2}{安装posgresql}{}% 2
+\BOOKMARK [0][-]{chapter.3}{安装nlpbamboo}{}% 3
+\BOOKMARK [1][-]{section.3.1}{下载bamboo索引文件}{chapter.3}% 4
+\BOOKMARK [1][-]{section.3.2}{安装postgresql中文分词模块}{chapter.3}% 5
+\BOOKMARK [0][-]{chapter.4}{导入数据}{}% 6
+\BOOKMARK [1][-]{section.4.1}{安装python的mysql postgresql模块}{chapter.4}% 7
+\BOOKMARK [0][-]{chapter.5}{测试步骤}{}% 8

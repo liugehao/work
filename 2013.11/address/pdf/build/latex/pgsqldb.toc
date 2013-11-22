@@ -1,0 +1,9 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}安装 CRF}{1}{chapter.1}
+\contentsline {chapter}{\numberline {2}安装posgresql}{3}{chapter.2}
+\contentsline {chapter}{\numberline {3}安装nlpbamboo}{5}{chapter.3}
+\contentsline {section}{\numberline {3.1}下载bamboo索引文件}{5}{section.3.1}
+\contentsline {section}{\numberline {3.2}安装postgresql中文分词模块}{5}{section.3.2}
+\contentsline {chapter}{\numberline {4}导入数据}{7}{chapter.4}
+\contentsline {section}{\numberline {4.1}安装python的mysql postgresql模块}{7}{section.4.1}
+\contentsline {chapter}{\numberline {5}测试步骤}{9}{chapter.5}
