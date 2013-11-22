@@ -126,7 +126,77 @@ importdata.py:
         or entry_comp = 0
 
 
+测试步骤
+====
 
-    
+建立数据表
+-----
 
-    
+.. codeblock:: postgresql
+
+    CREATE TABLE wd
+    (
+        bm integer NOT NULL,
+        sheng integer,
+        shi integer,
+        szd integer,
+        psfw text,
+        bpsfw text,
+        mc character varying(100),
+        CONSTRAINT wd_pkey PRIMARY KEY (bm)
+    );
+
+    CREATE TABLE psfw
+    (
+        id integer NOT NULL DEFAULT nextval('areas_id_seq'::regclass),
+        bm integer,
+        dz character varying(80),
+        szd integer,
+        pslb integer, -- 1全送排除 2全不送排除 3送 4不送
+        CONSTRAINT areas_pkey PRIMARY KEY (id)
+    )；
+    CREATE INDEX psfw_dz_idx
+        ON psfw
+        USING btree
+        (dz COLLATE pg_catalog."default");
+
+
+    CREATE TABLE psfw_lu
+    (
+        id integer NOT NULL DEFAULT nextval('roadnums_id_seq'::regclass),
+        psfw_id integer,
+        xiao integer,
+        da integer,
+        dsh integer, -- 0 不区分单双号 1 单号 2双号
+        CONSTRAINT roadnums_pkey PRIMARY KEY (id)
+    )
+    CREATE INDEX psfw_lu_xiao_da_idx
+        ON psfw_lu
+        USING btree
+        (xiao, da);
+
+psfw表存储szd-区县 dz-地址 pslb 类别 dzidx测试索引列
+
+psfw_lu 表为 psfw子表，当psfw表中dz为路且派送或者不派送范围不为全路段时，在
+
+psfw_lu表中记录门牌号码，xiao起始号码 da终止号码 ，dsh，标记奇偶数号码
+
+用imdata1.py把mysql gsjj表导入到pgsqldb中
+
+用addip.py处理pgsqldb表，数据进psfw表
+
+然后，增加一个tsquery列，做全文索引查询用：
+
+.. code-block:: sql
+
+    ALTER TABLE psfw ADD COLUMN dzidx tsquery;
+    CREATE INDEX psfw_dzidx_idx
+        ON psfw
+        USING gist
+        (dzidx);
+    update psfw set dzidx=to_tsquery('chinesecfg',dz);
+
+
+由于测试数据不规范，只进行bm=213300 szd=320481的公司进行测试，从ldb表中处理路、小区数据进入psfw psfw_lu 表，然后 用ldb表中数据进行测试
+
+用procdata1.py 处理ldb表中bm=213300数据进入psfw .
