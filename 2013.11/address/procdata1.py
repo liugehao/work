@@ -22,8 +22,7 @@ def procs(strtmp, a, b=None):
             return re.sub(x, '', strtmp)
     if b is not None:
         for x in b:
-            if strtmp.find(x) == 0:
-                return re.sub(r'^%s' % x, '', strtmp)
+            return re.sub(x, '', strtmp)
     return strtmp
 
 
