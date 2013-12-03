@@ -13,7 +13,7 @@ sys.setdefaultencoding('utf-8')
 debug = False #True
 res = {}
 rst = {}
-f = open('./psfw', 'w')
+f = open('./bpsfw', 'w')
 
 pickle_tmp = {}
 
@@ -102,8 +102,8 @@ def extractstr(str1, bm, szd):
             #print s, 'no'
             
 def psfw(row):
-    extractstr(procstr(row[1]), row[0], row[3])
-    #extractstr(procstr(row[2]), row[0], row[3])
+    #extractstr(procstr(row[1]), row[0], row[3])
+    extractstr(procstr(row[2]), row[0], row[3])
                 
                  
                  
@@ -112,8 +112,8 @@ def main():
     mconn = MySQLdb.connect(charset = 'gbk', host="192.168.1.16", user='caiwu', passwd='cai_Report', db='ydserver')
     mc = mconn.cursor()
     #mc.execute("select bm,psfw,bpsfw from gsjj WHERE bm=250073 ")
-    mc.execute("SELECT g.wdbm,j.psfw,j.bpsfw,g.bdqu FROM gsjj j INNER JOIN wdzzzbd g ON g.wdbm=j.bm ")
-    
+    #mc.execute("SELECT g.wdbm,j.psfw,j.bpsfw,g.bdqu FROM gsjj j INNER JOIN wdzzzbd g ON g.wdbm=j.bm ")
+    mc.execute("SELECT j.bm,j.psfw,j.bpsfw,g.bdqu FROM gsjj j INNER JOIN wdzzzbd g ON g.wdbm=j.bm ")
     for row in mc.fetchall():
         psfw(row)
     for a,b in rst.items():

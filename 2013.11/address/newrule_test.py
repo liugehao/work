@@ -35,6 +35,7 @@ def oddoreven(str1, gatenum):
     return None
 
 def psre(fw, ctry, addr):
+    if addr is None: return None
     if fw.has_key(str(ctry)) is False: return None
     for x,y in fw[str(ctry)].items():
         if x == 'all':
@@ -46,6 +47,7 @@ def psre(fw, ctry, addr):
         else:
             tmp = re.search(u'(\d+)号', addr)
             if tmp is None: return None
+
             
             gatenum = int(tmp.group(1))
             
@@ -57,15 +59,21 @@ def psre(fw, ctry, addr):
                 tmp = re.findall(u'[单|双]?号?\d+号?[\-－到至]\d+号?[单|双]?号?', str1)
                 if len(tmp) > 0: 
                     for tmp1 in tmp:
-                        (n1, n2) = re.findall(u'(\d+)号?[\-－到至](\d+)号?', str1)
+                        [(n1, n2)] = re.findall(u'(\d+)号?[\-－到至](\d+)号?', str1)
                         oe = oddoreven(str1, gatenum) 
                         if oe and gatenum >= n1 and gatenum <= n2:
                             return gs
+                    return None
                         
                 tmp = re.findall(u'(单号|双号)?\d+号(以上|以下|之间|区间|单号|双号)?', str1)
                 if len(tmp) > 0: 
                     for tmp1 in tmp:
-                        n1, n2 = re.findall(u'(\d+)号?(以上|以下)', str1)
+                        try:
+                            n1, n2 = re.findall(u'(\d+)号?(以上|以下)', str1)
+                        except:
+                            print tmp, str1
+                            print re.findall(u'(\d+)号?(以上|以下)', str1)
+                            raise 'a'
                         oe = oddoreven(str1, gatenum) 
                         if oe and gatenum >= n1 and n2 == u'以上':
                             return gs
@@ -85,11 +93,14 @@ def psre(fw, ctry, addr):
 if __name__ == "__main__":
     mconn = MySQLdb.connect(charset = 'gbk', host="192.168.1.16", user='caiwu', passwd='cai_Report', db='exp_address')
     mc = mconn.cursor()
-    mc.execute("SELECT `num`, `recv_ctry`, `recv_addr`, `gs` from address where `recv_ctry` = %s " , sys.argv[1])
-    if psfw.has_key(sys.argv[1]) is False: 
+    mc.execute("SELECT bdqu FROM ydserver.wdzzzbd WHERE wdbm=%s LIMIT 1" , sys.argv[1])
+    ctry = str(mc.fetchone()[0])
+    
+    mc.execute("SELECT `num`, `recv_ctry`, `recv_addr`, `entry_comp` from ldb where `entry_comp` = %s " , sys.argv[1])
+    if psfw.has_key(ctry) is False: 
         print 'no'
         exit(1)
-    for x,y in psfw[sys.argv[1]].items():
+    for x,y in psfw[ctry].items():
         for z,e in y:
             print x,z,e
     print '+' * 80
