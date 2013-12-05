@@ -13,7 +13,7 @@ sys.setdefaultencoding('utf-8')
 debug = False #True
 res = {}
 rst = {}
-f = open('./bpsfw', 'w')
+f = open('./psfw', 'w')
 
 pickle_tmp = {}
 
@@ -28,8 +28,11 @@ def result(i, str1='', bm='', szd=''):
 
 
 def pickle_tmp_add(i, str1, bm, szd):
-    if pickle_tmp.has_key(str(szd)) and pickle_tmp[str(szd)].has_key(i):
-        pickle_tmp[str(szd)][i].append((str1, bm))
+    if pickle_tmp.has_key(str(szd)):
+        if pickle_tmp[str(szd)].has_key(i):
+            pickle_tmp[str(szd)][i].append((str1, bm))
+        else:
+            pickle_tmp[str(szd)][i] = [(str1, bm),]
     else:
         pickle_tmp[str(szd)] = {i:[(str1, bm), ]}
         
@@ -93,7 +96,7 @@ def extractstr(str1, bm, szd):
                     result('rep3_no')
                     if debug: print x, 'rep3_no'
         elif len(s.strip()) == 0:
-            return
+            continue
         elif len(s) < 6:
             result('rep<6', s, bm, szd)
         else:
@@ -102,8 +105,8 @@ def extractstr(str1, bm, szd):
             #print s, 'no'
             
 def psfw(row):
-    #extractstr(procstr(row[1]), row[0], row[3])
-    extractstr(procstr(row[2]), row[0], row[3])
+    extractstr(procstr(row[1]), row[0], row[3])
+    #extractstr(procstr(row[2]), row[0], row[3])
                 
                  
                  
@@ -113,7 +116,7 @@ def main():
     mc = mconn.cursor()
     #mc.execute("select bm,psfw,bpsfw from gsjj WHERE bm=250073 ")
     #mc.execute("SELECT g.wdbm,j.psfw,j.bpsfw,g.bdqu FROM gsjj j INNER JOIN wdzzzbd g ON g.wdbm=j.bm ")
-    mc.execute("SELECT j.bm,j.psfw,j.bpsfw,g.bdqu FROM gsjj j INNER JOIN wdzzzbd g ON g.wdbm=j.bm ")
+    mc.execute("SELECT j.bm,j.psfw,j.bpsfw,g.bdqu FROM gsjj j INNER JOIN wdzzzbd g ON g.wdbm=j.bm ")#where bm = 210260")
     for row in mc.fetchall():
         psfw(row)
     for a,b in rst.items():
@@ -127,5 +130,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+    #print pickle_tmp['320107']
 
 
