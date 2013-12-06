@@ -53,7 +53,11 @@ def psre(fw, ctry, addr):
             for str1, gs in y:
                 tmp = re.search(u'.*(街|胡同|弄|路|大道|巷)', str1)
                 if tmp is None: continue
-                if re.search(tmp.group(0), addr) is None: continue
+                if re.search(tmp.group(0), addr) is None: 
+                    continue
+                elif len(re.findall(u'.*(街|胡同|弄|路|大道|巷)$', str1)) > 0:
+                    return gs, x, str1
+                
                 
                 tmp = re.findall(u'[单|双]?号?\d+号?[\-－到至]\d+号?[单|双]?号?', str1)
                 if len(tmp) > 0: 
@@ -102,21 +106,32 @@ if __name__ == "__main__":
                 INNER JOIN address a ON a.num=s.`num`
                 WHERE w.qu=%s LIMIT 10000 """ , sys.argv[1])
                 
-
-    for x,y in psfw[sys.argv[1]].items():
-        for z,e in y:
-            print x,z,e
+    if psfw.has_key(sys.argv[1]):
+        for x,y in psfw[sys.argv[1]].items():
+            for z,e in y:
+                print x,z,e
     print '+' * 80
-    xx = 0
+    if bpsfw.has_key(sys.argv[1]):
+        for x,y in bpsfw[sys.argv[1]].items():
+            for z,e in y:
+                print x,z,e
+    print '+' * 80
+    xx = [0,0,0]
     for row in mc.fetchall():
         print row[0], row[1], row[3]
         print row[2]
-        j=psre(psfw, row[1], row[2])
-        if j is None:
-            print j
-            xx += 1
-            print '-' * 60
-            continue
-        print ','.join([str(x) for x in j])
+        ps=psre(psfw, row[1], row[2])
+        bps=psre(bpsfw, row[1], row[2])
+        if bps is None and ps is None:
+            print u'不确定'
+            xx[0] += 1
+        if bps is not None:
+            print u'不派送:', ','.join([str(x) for x in bps])
+            xx[1] += 1
+        elif ps is not None:
+            print u'派送:', ','.join([str(x) for x in ps])
+            xx[2] += 1
         print '-' * 60
-    print xx
+        
+    print  u'不确定', xx[0],  u'不派送:', xx[1],  u'派送:', xx[2]
+

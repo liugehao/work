@@ -64,8 +64,14 @@ def extractstr(str1, bm, szd):
         result('all', 'all', bm, szd )
         return
     for s in str1.split(' '):
-        if len(str1) <=1:
+            
+        if len(s) <=1:
             continue
+        try:
+            int(str1)
+            continue
+        except:
+            pass
         if  len(res['rep4'].findall(s))>0:
             result('rep4', s, bm, szd)
             if debug:  print s, 'rep4'
