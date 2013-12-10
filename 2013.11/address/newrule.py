@@ -13,7 +13,9 @@ sys.setdefaultencoding('utf-8')
 debug = False #True
 res = {}
 rst = {}
-f = open('./psfw', 'w')
+f = sys.stdout #open('./psfw', 'w')
+
+wronggs = open('./wrong','w')
 
 pickle_tmp = {}
 
@@ -52,10 +54,10 @@ def procstr(str1):
     tmp = re.sub(u'([一二三四五六七八九][一二三四五六七八九十百千万零]*)号', lambda x: str(getResultForDigit(x.group(1))), tmp)
     return tmp
 
-res['rep1'] = re.compile(u'(工业园|博物馆|局|[一二三四五]期|分院|学院|大学|嘉园|家园|家属[区楼院]|银行|小区|公司|市场|中心|花园|苑|广场|酒店|大[楼厦院]|公司|学校|分校|宿舍|屯|庄|村|庄|镇|乡|幼儿园|小学|中学|号院|基地|政府|研究所|产业园|产业园区|集团|工业区|工业园区|开发区|体育馆|医院|汽车城|公寓|派出所|办公楼|综合楼|住宅楼|高中|法院|武装部|大队|软件园|检察院|[一二三四五六七八九十百千万零]+区|写字楼|家属楼)$')
+res['rep1'] = re.compile(u'(工业园|博物馆|局|[一二三四五]期|分院|学院|大学|嘉园|家园|家属[区楼院]|银行|小区|公司|市场|中心|花园|苑|广场|酒店|大[楼厦院]|公司|学校|分校|宿舍|屯|庄|村|庄|镇|乡|幼儿园|小学|中学|号院|基地|政府|研究所|产业园|产业园区|集团|工业区|工业园区|开发区|体育馆|医院|汽车城|公寓|派出所|办公楼|综合楼|住宅楼|高中|法院|武装部|大队|软件园|检察院|[一二三四五六七八九十百千万零]+区|写字楼|家属楼|商场|宿舍楼)$')
 res['rep2'] = re.compile(u'(街|胡同|弄|路|大道|巷)$')
-res['rep3'] = re.compile(u'(街|胡同|弄|路|大道|巷)(甲乙丙丁)\(.*?\)$')
-res['rep4'] = re.compile(u'(街|胡同|弄|路|大道|巷)(单号|双号)?\d*?号?[\-到至]?\d*?号?(单号|双号)?$')
+res['rep3'] = re.compile(u'(街|胡同|弄|路|大道|巷)(甲乙丙丁)?\(.*?\)$')
+res['rep4'] = re.compile(u'(街|胡同|弄|路|大道|巷)(单号|双号)?\d*?号?[\-到至]?\d*?号?(单号|双号)?')
 #((单号|双号)[一二三四五六七八九][一二三四五六七八九十百千万零]*)号(以上|以下)
 def extractstr(str1, bm, szd):
     if str1 is None: return None
@@ -107,12 +109,14 @@ def extractstr(str1, bm, szd):
             result('rep<6', s, bm, szd)
         else:
             result('no')
+            wronggs.write("%s\t%s\n" % (bm, s))
             #if debug: 
             #print s, 'no'
+
             
 def psfw(row):
-    extractstr(procstr(row[1]), row[0], row[3])
-    #extractstr(procstr(row[2]), row[0], row[3])
+    #extractstr(procstr(row[1]), row[0], row[3])
+    extractstr(procstr(row[2]), row[0], row[3])
                 
                  
                  
@@ -130,8 +134,9 @@ def main():
     pickle.dump(pickle_tmp, f)
     #t = pickle.dumps(pickle_tmp)
     #f.write(struct.pack(">%ssi" % len(t), t, 100))
-    f.close()
-    print '结尾为“no”的行未匹配'  
+    
+    print '结尾为“no”的行未匹配' 
+    f.close() 
 
 
 if __name__ == "__main__":
