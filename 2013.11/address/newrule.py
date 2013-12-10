@@ -13,7 +13,7 @@ sys.setdefaultencoding('utf-8')
 debug = False #True
 res = {}
 rst = {}
-f = sys.stdout #open('./psfw', 'w')
+f = open('./bpsfw', 'w')
 
 wronggs = open('./wrong','w')
 
@@ -86,6 +86,8 @@ def extractstr(str1, bm, szd):
         elif len(res['rep3'].findall(s)) >0:
             if debug: print s
             #print s
+            if len(re.findall(u'(单号|双号)?\d+号(以上|以下|之间|区间|单号|双号)?', s)) >0:
+                result('rep3_5', x, bm, szd)
             for x in s.split('$$$'):
                 if len(re.findall(u'(单号|双号)?\d+号(以上|以下|之间|区间|单号|双号)?', x)) >0:
                     result('rep3_1', x, bm, szd)
@@ -109,7 +111,7 @@ def extractstr(str1, bm, szd):
             result('rep<6', s, bm, szd)
         else:
             result('no')
-            wronggs.write("%s\t%s\n" % (bm, s))
+            
             #if debug: 
             #print s, 'no'
 
