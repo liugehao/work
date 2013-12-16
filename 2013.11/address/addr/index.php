@@ -21,8 +21,11 @@ $str_wrong =[];
 $str_right =[];
 $matches = new matches();
 
+#var_dump($matches->matchstr('广田路双号(90、92、94)'));
 
-foreach(explode(",", $matches->replace1($fw)) as $x){
+$s = $matches->replace1($fw);
+echo $s;
+foreach(explode(",", $s) as $x){
     if(trim($x)=='') continue;
 
     $result = $matches->matchstr($x);
@@ -32,25 +35,9 @@ foreach(explode(",", $matches->replace1($fw)) as $x){
         $str_wrong[] = $result[0];
 
 }
-$str='除不派送范围列出';
-echo mb_strlen($str);
-print preg_match('/[双单][数号]/u', $str);
-print !preg_match('/\d/', $str);
-if(preg_match('/[双单][数号]/', $str) && !preg_match('/\d/', $str))
-                print '5';
-     
-  var_dump(preg_replace(     '/([一二三四五六七八九十]),/u', '$1.',   '马杭广电路,马杭广电路,兴隆街,贺北第一,二,三,三工业园,利华南村,大沈村，'      ));
-
-preg_match('/,.*?一\.二\.三\.三.*?,/u',"马杭广电路,马杭广电路,兴隆街,贺北第一.二.三.三工业园,利华南村,大沈村，",$a);
-var_dump($a);
-
-   /*             
-echo                preg_replace_callback('/,(.*?)([一二三四五六七八九十],)+?(.+?),/u',
-                create_function('$m',
-                preg_replace(),
-                '马杭广电路，兴隆街，贺北第一、二、三工业园，利华南村，大沈村，'
-                );
-                */
+echo preg_match('/([双单][数号]|\d+)/u', "十三纬路(单号)");
+echo preg_match('/[双单]号[^\d以]/u', '高尔基路单号199以上、双号212-10以上');
+echo preg_match('/[双单]号[^\d以]/u', '民政街单号139以上、双号大号');
 ?>
 <html>
 <head>
@@ -66,11 +53,11 @@ $(function(){
 </head>
 <body>
 <div>
-OK:<?php echo implode("\t", $str_right);?>
+OK:<?php echo implode("<br>", $str_right);?>
 </div>
 <hr>
 <div>
-Not matchs:<?php echo implode("\t", $str_wrong) ;?>
+Not matchs:<?php echo implode("<br>", $str_wrong) ;?>
 </div>
 </body>
 </html>
