@@ -1,5 +1,24 @@
 <?php
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+
 include './matches.php';
+
+$matches = new matches();
+
+if(isset($_GET['act']) && $_GET['act'] == 'test'){
+
+    foreach(explode(",", $matches->replace1($_POST['content'])) as $x){
+        if(trim($x)=='') continue;
+
+        $result = $matches->matchstr($x);
+        if($result[1])
+            echo wrapspan($result);
+        else
+            echo wrapspan1($result);
+    }
+    die(0);
+}
 $conn = new PDO('mysql:host=127.0.0.1;dbname=ydserver;charset=utf8','root','l');
 $rs = $conn->query("select psfw from gsjj where bm = '{$_REQUEST['bm']}'");
 
@@ -10,34 +29,19 @@ $row = $rs->fetch();
 $fw = $row[0];
 
 
-
 function wrapspan($v){
-    return "<span>{$v[0]}[{$v[1]}]</span>";
+    return "<span {$v[1]}>{$v[0]}</span>,";
 }
-echo $fw;
-echo '<hr>';
+function wrapspan1($v){
+    return "<span class='b' >{$v[0]}</span>,";
+}
 
 $str_wrong =[];
 $str_right =[];
-$matches = new matches();
-
-#var_dump($matches->matchstr('广田路双号(90、92、94)'));
 
 $s = $matches->replace1($fw);
-echo $s;
-foreach(explode(",", $s) as $x){
-    if(trim($x)=='') continue;
 
-    $result = $matches->matchstr($x);
-    if($result[1])
-        $str_right[] = wrapspan($result);
-    else
-        $str_wrong[] = $result[0];
 
-}
-echo preg_match('/([双单][数号]|\d+)/u', "十三纬路(单号)");
-echo preg_match('/[双单]号[^\d以]/u', '高尔基路单号199以上、双号212-10以上');
-echo preg_match('/[双单]号[^\d以]/u', '民政街单号139以上、双号大号');
 ?>
 <html>
 <head>
@@ -48,16 +52,51 @@ $(function(){
     $('div span').click(function(){
         alert($(this).text());
     });
+    //$('#psfw').val($('#div1').html());
+    $('#test').click(function(){
+        $.post('./index.php?act=test', {'content':$('#psfw').val()}, function(data){
+            $('#div1').html(data);
+        }
+        , 'html'
+        );
+    });
 });
 </script>
+<style>
+.b {color:red;}
+</style>
 </head>
 <body>
-<div>
-OK:<?php echo implode("<br>", $str_right);?>
+<div style="border:dotted gray;"><?php echo $fw;?></div>
+<br>
+<div id=div1 style="border:dotted gray;width:800px;">
+<?php 
+foreach(explode(",", $s) as $x){
+    if(trim($x)=='') continue;
+
+    $result = $matches->matchstr($x);
+    if($result[1])
+        echo wrapspan($result);
+    else
+        echo wrapspan1($result);
+}
+?>
 </div>
-<hr>
-<div>
-Not matchs:<?php echo implode("<br>", $str_wrong) ;?>
-</div>
+<form method=post>
+<textarea name=psfw id=psfw style="width:835px;height:270px;">
+<?php 
+
+foreach(explode(",", $s) as $x){
+    if(trim($x)=='') continue;
+    $result = $matches->matchstr($x);
+    echo $result[0].',';
+
+
+}
+?>        
+        </textarea>
+<input type=submit value="Submit">
+<input type=button value="Test" id=test>
+</form>
 </body>
 </html>
