@@ -11,7 +11,7 @@ class matches
         $tmp = preg_replace('/[\s\r\n·\/、,，.;:。；：_|#◇◆《》★　●【】]|<.*?>|&\w*?;/u', ",", $tmp);
         
         
-        $tmp = preg_replace('/[\-－—]+/u', '-', $tmp);
+        $tmp = preg_replace('/[\-－—～]+/u', '-', $tmp);
         
 
         
@@ -62,23 +62,39 @@ if($this->debug) echo $tmp.' r4 <br>';
 if($this->debug) echo $tmp.' r5 <br>';
         $tmp= preg_replace('/(\d+)([单双][号数])(以上|以后|以下)(,)/u', '$2$1$3$4', $tmp);
         $tmp= preg_replace('/(,)(\d+)([单双][号数])(以上|以后|以下)/u', '$1$3$2$4', $tmp);
+        if($this->debug) echo $tmp.' r5_2 <br>';
         $tmp= preg_replace('/(\d+)(以上|以后|以下)([单双][号数])(,)/u', '$3$1$2$4', $tmp);
         $tmp= preg_replace('/(,)(\d+)(以上|以后|以下)([单双][号数])/u', '$1$4$2$3', $tmp);
-        
+        if($this->debug) echo $tmp.' r5_3 <br>';
         $tmp= preg_replace('/(,)[单双](\d+)/u', '$1号$2', $tmp);
         #(单1-79___双2-58)
         
         #
         #$tmp= preg_replace('/(\d+)(单号|双号)、/u', '$2$1,', $tmp);
-        $tmp= preg_replace('/(\d+)(单号|双号)/u', '$1、$2', $tmp);
+        $tmp= preg_replace('/(\d+)([单双][数号])/u', '$1、$2', $tmp);
+         if($this->debug) echo $tmp.' r5_3_1 <br>';
         $tmp= preg_replace('/(以上|以后|以下)([单双][号数])/u', '$1、$2', $tmp);
-        $tmp= preg_replace('/(以上|以后|以下)\d+/u', '$1、$2', $tmp);
-        
+        if($this->debug) echo $tmp.' r5_3_2 <br>';
+        $tmp= preg_replace('/(以上|以后|以下)(\d+)/u', '$1、$2', $tmp);
+        if($this->debug) echo $tmp.' r5_4 <br>';
         
         $tmp = preg_replace('/(\d+)[\-—至到]+?(\d+)/u', '$1-$2', $tmp);
-        
+        if($this->debug) echo $tmp.' r5_5 <br>';
 
         $tmp = preg_replace('/、+/', '、', $tmp);
+        
+        
+        
+        
+        #1 2 3 4 5 6村
+        
+        if(preg_match_all('/([\d],)+\d[村区段]/u', $tmp, $tmp1)){
+            foreach(array_unique($tmp1[0]) as $tmp2)
+            var_dump($tmp2);
+            $tmp= str_replace($tmp2, preg_replace(array('/1|１/u','/2|２/u','/3|３/u','/4|４/u','/5|５/u','/6|６/u','/7|７/u','/8|８/u','/9|９/u','/10|１０/u'), array(
+            '一','二','三','四','五','六','七','八','九','十' ),$tmp2), $tmp);
+            var_dump($tmp);
+        }
         #静安里一区四区六区
         if(preg_match_all('/([一二三四五六七八九十][区段村][,]?)+/u', $tmp,$tmp1)){
             foreach($tmp1[0] as $tmp2){
@@ -114,7 +130,7 @@ if($this->debug) echo $tmp.' r5 <br>';
         if(preg_match_all('/,(([^,]*?([东西北],)+.*?),)/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
         #var_dump($tmp1);
         #var_dump($tmp);echo "<hr>";
-        
+        if($this->debug) echo $tmp.' r6 <br>';
         if(preg_match_all('/\((.*?)\)/u', $tmp, $tmp1)){
             foreach($tmp1[1] as $tmp2){
                 if(!preg_match('/\d/', $tmp2)){
@@ -129,7 +145,7 @@ if($this->debug) echo $tmp.' r5 <br>';
                 
             }
         }
-
+        if($this->debug) echo $tmp.' r7 <br>';
         
         #$tmp = preg_replace_callback('/,(.*?)([一二三四五六七八九十],)+?(.+?),/u',);
         $tmp = preg_replace('/,((单号|双号|甲|乙|丙|丁)?\d+[\-号]?)/', "、$1", $tmp);
@@ -171,13 +187,21 @@ if($this->debug) echo $tmp.' r5 <br>';
         if(preg_match('/^(号?以[上后下]|不含)/u', $str)) return array($str, false);
         if(preg_match('/(号?以[上后下]|不含).*?\(/u', $str)) return array($str, false);
         if(preg_match('/^\(.*\)$/u', $str)) return array($str, false);
+        
+        
+        if(preg_match('/\d+-\.*?\(/u', $str)) return array($str, false);
         if(preg_match_all('/\(/u', $str)>1) return array($str, false);
         if(preg_match('/^[\-—至到]\d+/u', $str)) return array($str, false);
         if(preg_match('/区[域间]/u', $str))    return array($str, false);
         if(preg_match('/[东南西北][至到]/u', $str))    return array($str, false);
-        if(preg_match('/以[东南西北]/u', $str))    return array($str, false);
+        if(preg_match('/以[东南西北]|除此号/u', $str))    return array($str, false);
         if(preg_match('/除不派送范围.{0,3}?其它全[部]?派[送]?/u', $str))
         if(count(preg_match('/'.$this->str1.'/u', $str)) >1)  return array($str, false);
+        if(preg_match('/[^\d][\-到][^\d]/u', $str))    return array($str, false);
+        
+        if(preg_match('/\(.*?[^\d单双号以下上\-、].*?\)/u', $str)) return array($str, false);
+        
+        $str = preg_replace('/全程$|全部$|全路段$|全段$/u', '', $str);
         
         
         if($str == '详情请点击') return array($str, false);
@@ -211,15 +235,18 @@ if($this->debug) echo $tmp.' r5 <br>';
 
             return array($temp_f[0].implode('、', $temp1), '6');
         }*/
-        
+        #echo $str."<br>";
         if(preg_match('/[双单]号\(/u', $str)) return array($str, false);
+        if(preg_match('/单号\d+.双号\d+.[\-至]单号\d+.双号\d+/u', $str)) return array($str, false);
+        if(preg_match('/双号\d+.单号\d+.[\-至]双号\d+.单号\d+/u', $str)) return array($str, false);
+        
         if(preg_match('/\(.*?\)$/u', $str)){
             #if(preg_match('/([双单][数号]|\d+)/u', $str)) return array($str, '_1_1');
             if(preg_match('/\(.*?其它/u', $str)) return array($str, false);
             if(preg_match('/(.*?)\(/u', $str, $a) && mb_strlen($a[1]) <2) return array($str, false);
             
             if(preg_match('/\d{5,}/u', $str)) return array($str, false); 
-            if(preg_match('/\(.*?[含除]/u', $str)) return array($str, false);
+            if(preg_match('/\(.*?[含除包]/u', $str)) return array($str, false);
             if(preg_match('/([双单][数号]|\d+)([\-以、][上后下])?/u', $str)){
             #if(preg_match('/中山南一路/u',$str)) echo $str;
                 if(preg_match('/分部/u', $str)) return array($str, false);
@@ -232,8 +259,10 @@ if($this->debug) echo $tmp.' r5 <br>';
             //    return array($str, '3');
             //if(preg_match('/[^\d]\d{1,5}(号)?(以上|以后|以下|([-到至]\d{1,5}号?))?([双单][数号])?\([含除](此号)?\)$/u', $str))
             //    return '5';
-        if($this->debug) echo $str." m3 <br>";
+            if($this->debug) echo $str." m3 <br>";
         }else{
+            #单号3155、双号3050至单号3535、双号3550
+            
             
             if($this->debug) echo $str." m4 <br>";
             //if(preg_match('/[()]/u', $str)) return false;
@@ -243,15 +272,16 @@ if($this->debug) echo $tmp.' r5 <br>';
             //    return array($str, '5');
 
             if(preg_match('/([双单][数号]|\d+)([\-以、][上后下]|$)/u', $str)){
+                #echo $str."<br>";
                 if(preg_match('/分部/u', $str)) return array($str, false);
                 if(preg_match('/[双单]号[^\d以、]/u', $str))
                     return array($str, false);
                 if(preg_match('/\d{5,}/', $str)) return array($str, false);
                 #echo $str."<br>";
                 $tmp = preg_replace('/、?([双单][数号]\d?|\d+)(.*?$|$)/u','($1$2)', $str);
-                if(mb_strlen(preg_match('/(.*?)\(/u', $tmp)) <2)return array($str, false);
-                return array($tmp, '_1');
-                
+                if(mb_strlen(preg_match('/\(/u', $tmp)) <2)return array($tmp, '_1');
+                else return array($str, false);
+                    
                 #return array(preg_replace('/、?([双单][数号]\d?|\d+)([\-以、].*?$|$)/u','($1$2)', $str), '_1');
             }
             
