@@ -86,19 +86,17 @@ if($this->debug) echo $tmp.' r5 <br>';
         
         
         
-        #1 2 3 4 5 6村
-        
+        #1 2 3 4 5 6村        
         if(preg_match_all('/([\d],)+\d[村区段]/u', $tmp, $tmp1)){
-            foreach(array_unique($tmp1[0]) as $tmp2)
-            var_dump($tmp2);
-            $tmp= str_replace($tmp2, preg_replace(array('/1|１/u','/2|２/u','/3|３/u','/4|４/u','/5|５/u','/6|６/u','/7|７/u','/8|８/u','/9|９/u','/10|１０/u'), array(
-            '一','二','三','四','五','六','七','八','九','十' ),$tmp2), $tmp);
-            var_dump($tmp);
+            foreach(array_unique($tmp1[0]) as $tmp2){
+                $tmp= str_replace($tmp2, preg_replace(array('/1|１/u','/2|２/u','/3|３/u','/4|４/u','/5|５/u','/6|６/u','/7|７/u','/8|８/u','/9|９/u','/10|１０/u'), array('一','二','三','四','五','六','七','八','九','十' ),$tmp2), $tmp);
+            }
+            #var_dump($tmp);
         }
         #静安里一区四区六区
         if(preg_match_all('/([一二三四五六七八九十][区段村][,]?)+/u', $tmp,$tmp1)){
             foreach($tmp1[0] as $tmp2){
-                if(preg_match_all('/([一二三四五六七八九十])([区段村]),?/u', $tmp2,$tmp3) > 1){
+                if(preg_match_all('/([一二三四五六七八九十])([街|胡同|弄|路|道|巷|里|矿|区|段|村|区|队]),?/u', $tmp2,$tmp3) > 1){
                
                     $tmp4 = implode(',', $tmp3[1]).$tmp3[2][0].','; 
                     $tmp = str_replace($tmp2, $tmp4, $tmp);
@@ -108,13 +106,13 @@ if($this->debug) echo $tmp.' r5 <br>';
         }
         #var_dump($tmp);
         #繁荣上中下街
-        if(preg_match_all('/([上中下]{2,})(街|胡同|弄|路|道|巷|里|矿)/uU', $tmp,$tmp1)){
+        if(preg_match_all('/([上中下]{2,})(街|胡同|弄|路|道|巷|里|矿|区|段|村|区|队)/uU', $tmp,$tmp1)){
             for($i=0;$i<count($tmp1[1]);$i++){
                 $tmp = str_replace($tmp1[0][$i], implode(",",preg_split('/(?<!^)(?!$)/u', $tmp1[1][$i])).$tmp1[2][$i], $tmp);
             }
         }
         #荥兴路西一二三段 
-        if(preg_match_all('/([一二三四五六七八九十]{2,})(段|村|区|队)/uU', $tmp,$tmp1)){
+        if(preg_match_all('/([一二三四五六七八九十]{2,})(街|胡同|弄|路|道|巷|里|矿|区|段|村|区|队)/uU', $tmp,$tmp1)){
             for($i=0;$i<count($tmp1[1]);$i++){
                 $tmp = str_replace($tmp1[0][$i], implode(",",preg_split('/(?<!^)(?!$)/u', $tmp1[1][$i])).$tmp1[2][$i], $tmp);
             }
@@ -123,11 +121,15 @@ if($this->debug) echo $tmp.' r5 <br>';
         #荥兴路西一,二,三段 繁荣上,中,下街
         #var_dump($tmp);
         #echo "<hr>";
-        if(preg_match_all('/,(([^,]*?([一二三四五六七八九十],)+.*?),)/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
+        #if(preg_match_all('/,(([^,]*?([一二三四五六七八九十],)+.*?),)/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
+        #var_dump($tmp);echo '<hr>';
+        if(preg_match_all('/([^,一二三四五六七八九十]*?([一二三四五六七八九十],?)+[^,]*?),/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
         #var_dump($tmp1);
-        if(preg_match_all('/,(([^,]*?[^以]([上中下],)+.*?),)/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
+        if(preg_match_all('/([^,上中下以]*?([上中下],?)+[^,]*?),/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
+        #if(preg_match_all('/,(([^,]*?[^以]([上中下],)+.*?),)/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
         #var_dump($tmp1);
-        if(preg_match_all('/,(([^,]*?([东西北],)+.*?),)/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
+        #if(preg_match_all('/,(([^,]*?([东西北],)+.*?),)/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
+        if(preg_match_all('/([^,东西北]*?([东西北],?)+[^,]*?),/u', $tmp,$tmp1, PREG_PATTERN_ORDER))$tmp = $this->replace2($tmp, $tmp1);
         #var_dump($tmp1);
         #var_dump($tmp);echo "<hr>";
         if($this->debug) echo $tmp.' r6 <br>';
@@ -165,11 +167,18 @@ if($this->debug) echo $tmp.' r5 <br>';
         return $tmp;
     }
     function replace2($tmp, $tmp1){
-        foreach($tmp1[2] as $tmp2){
-            if(!preg_match('/[一二三四五六七八九十上中下东西北],[一二三四五六七八九十上中下东西北]/u', $tmp2)) continue;
-            preg_match('/([^,]*?)((,?[一二三四五六七八九十上中下东西北],?){2,})(.*?)$/u', $tmp2, $tmp3);
-            $tmp4 = explode(',', $tmp3[2]);
 
+    
+        foreach($tmp1[1] as $tmp2){
+            if(!preg_match('/[一二三四五六七八九十上中下东西北],[一二三四五六七八九十上中下东西北]/u', $tmp2)) continue;
+            preg_match('/^([^一二三四五六七八九十上中下东西北]+)((,?[一二三四五六七八九十上中下东西北],?)+)([^一二三四五六七八九十上中下东西北]+)$/u', $tmp2, $tmp3);
+
+            if(preg_match('/[东西北][一二三四五六七八九十][东西北]?/u', $tmp3[2]))
+                preg_match('/^([^一二三四五六七八九十]+)((,?[一二三四五六七八九十],?)+)([^一二三四五六七八九十]+)$/u', $tmp2, $tmp3);
+            if(preg_match('/[上中下][一二三四五六七八九十][上中下]?/u', $tmp3[2]))
+                preg_match('/^([^一二三四五六七八九十]+)((,?[一二三四五六七八九十],?)+)([^一二三四五六七八九十]+)$/u', $tmp2, $tmp3);
+            $tmp4 = explode(',', $tmp3[2]);
+            $tmp5 = array();
             foreach($tmp4 as $tmp7)
                 $tmp5[] = $tmp3[1].$tmp7.$tmp3[4];
             
