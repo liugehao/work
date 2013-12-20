@@ -9,29 +9,39 @@ class MatchAddr
     private $bpsfw = '';
 
     public function __construct(){
-        /*
+        
         $f = fopen('./psfw', 'r');
         $this->psfw = unserialize(stream_get_contents($f));
         fclose($f);
         $f = fopen('./bpsfw', 'r');
         $this->bpsfw = unserialize(stream_get_contents($f));
         fclose($f);
-        */
+        
     }
     
     function Match($qx, $addr){
         $ps = $this->Match1($qx, $addr);
-        $bps = $this->Match1($qx, $addr);
+        $bps = $this->Match1($qx, $addr, 'bpsfw');
+        
+        if($bps[0] === 'all' && $ps) return array('p', $ps[1]);
+        if($bps) return  array('b', $bps[1]);
+        if($ps) return  array('p', $ps[1]);
+        return false;
+        
     }    
     
-    function Match1($qx, $addr, $lb = 'psfw'){
-        foreach($this->$$lb[$qx] as $reg){
+    function Match1($qx, $addr, $lb='psfw'){
+        $lb = $lb =='psfw' ?$this->psfw:$this->bpsfw;
+        
+        foreach($lb[$qx] as $reg){
+            if($reg[0] === 'all')
+                return $reg;
             if(preg_Match('/\(/u', $reg[0]))
                 $tmp = $this->MatchBracket($reg, $addr);
             else
                 $tmp = $this->MatchNoBracket($reg, $addr);
             if($tmp)
-                return $tmp;
+                return $reg;
         }
         return false;
     }
@@ -87,3 +97,4 @@ $t = new MatchAddr();
 $t1 = $t->MatchBracket(array('沪太路(单号5365-6526)','200547'), '沪太路5369');
 var_dump($t1);
 
+var_dump($t->Match('310113','沪太路5369'));
