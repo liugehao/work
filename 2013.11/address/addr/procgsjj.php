@@ -11,11 +11,16 @@ function matchesall($row, $i){
     foreach(explode(",", $s) as $x){
         if(trim($x)=='') continue;
         $result = $matches->matchstr($x);
-        if($result[1])
+        if($result[1]){
+            #echo $result[0]."\n";
             if($i == 1)
                 $psfw[$row[3]][]  = array($result[0], $row[0]);
             else
                 $bpsfw[$row[3]][]  = array($result[0], $row[0]);
+        }
+        else{
+            #var_dump($result);
+        }
     }
 
 }
@@ -23,12 +28,13 @@ function matchesall($row, $i){
 
 
 $conn = new PDO('mysql:host=127.0.0.1;dbname=ydserver;charset=utf8','root','l');
-$rs = $conn->query("SELECT j.bm,j.psfw,j.bpsfw,g.qu FROM ydserver.gsjj j INNER JOIN addr.wdqu g ON g.bm=j.bm ;");
+$rs = $conn->query("SELECT j.bm,j.psfw,j.bpsfw,g.qu FROM ydserver.gsjj j INNER JOIN addr.wdqu g ON g.bm=j.bm ");//where j.bm=125000;");
 while($row=$rs->fetch()){
     #print "$row[0], $row[3],". mb_strlen($row[1])." ". mb_strlen($row[2])."\n";
     matchesall($row, 1);
     matchesall($row, 2);
 }
+//die();
 $psfwfile = fopen('./psfw', 'w');
 $bpsfwfile = fopen('./bpsfw', 'w');
 

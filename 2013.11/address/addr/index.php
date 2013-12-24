@@ -12,6 +12,7 @@ if(isset($_GET['act']) && $_GET['act'] == 'test'){
         if(trim($x)=='') continue;
 
         $result = $matches->matchstr($x);
+        echo '////////////////////////////////////////////////////////////////';
         if($result[1])
             echo wrapspan($result);
         else

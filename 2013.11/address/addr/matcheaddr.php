@@ -5,11 +5,15 @@
 */
 class MatchAddr
 {
-    private $psfw = '';
-    private $bpsfw = '';
+    public $psfw = '';
+    public $bpsfw = '';
 
     public function __construct(){
-        
+        if(!file_exists('./psfw') || !file_exists('./bpsfw')){
+            echo "file not found.\n";
+            return false;
+        }
+            
         $f = fopen('./psfw', 'r');
         $this->psfw = unserialize(stream_get_contents($f));
         fclose($f);
@@ -18,8 +22,14 @@ class MatchAddr
         fclose($f);
         
     }
-    
+    function QuExists($qx){
+        if(!array_key_exists($qx, $this->psfw) && !array_key_exists($qx, $this->bpsfw) )
+            return false;
+        return true;
+    }
     function Match($qx, $addr){
+        if(!$this->QuExists($qx))
+            return false;
         $ps = $this->Match1($qx, $addr);
         $bps = $this->Match1($qx, $addr, 'bpsfw');
         
@@ -32,14 +42,16 @@ class MatchAddr
     
     function Match1($qx, $addr, $lb='psfw'){
         $lb = $lb =='psfw' ?$this->psfw:$this->bpsfw;
-        
+        if(!array_key_exists($qx, $lb)) return false;
         foreach($lb[$qx] as $reg){
             if($reg[0] === 'all')
                 return $reg;
-            if(preg_Match('/\(/u', $reg[0]))
+            if(preg_Match('/\(/u', $reg[0])){
                 $tmp = $this->MatchBracket($reg, $addr);
-            else
+            }
+            else{
                 $tmp = $this->MatchNoBracket($reg, $addr);
+            }
             if($tmp)
                 return $reg;
         }
@@ -48,6 +60,8 @@ class MatchAddr
     
     function MatchBracket($reg, $addr){
         if(preg_Match('/^([^(]*?)\(([^)]*?)\)$/u', $reg[0], $tmp)){
+            if($tmp[1] =='' || $tmp[1] == Null)
+                echo "$tmp[1] \t $addr \t $reg[0] \t $reg[1]";
             if(strpos($addr, $tmp[1]) !==false){
                 if(preg_Match('/'.$tmp[1].'.*?(\d+)/u', $addr, $tmp1) && count($tmp1)>0){
                 
@@ -72,7 +86,7 @@ class MatchAddr
     }
     
     function UpOrDown($upordown, $doorplate){
-    var_dump($upordown);
+    #var_dump($upordown);
         if(preg_Match('/(\d+)(以上|以后)/u', $upordown, $tmp) && $doorplate >= $tmp[1]) return true;
         if(preg_Match('/(\d+)(以前|以下)/u', $upordown, $tmp) && $doorplate <= $tmp[1]) return true;
         return false;
@@ -92,9 +106,10 @@ class MatchAddr
     }
 }
 
-
+/*
 $t = new MatchAddr();
 $t1 = $t->MatchBracket(array('沪太路(单号5365-6526)','200547'), '沪太路5369');
 var_dump($t1);
 
 var_dump($t->Match('310113','沪太路5369'));
+*/

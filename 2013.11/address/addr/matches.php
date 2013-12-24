@@ -232,13 +232,14 @@ if($this->debug) echo $tmp.' r5 <br>';
         return $tmp;
     }
     function matchstr($str){
+
         if(preg_match('/全境[不]?派送/u', $str)) return array('all', '0');
         
         if($this->debug) echo $str." m1 <br>";
         $str = preg_replace('/全境$/u', '', $str);
         if(preg_match('/^(号?以[上后下]|不含)/u', $str)) return array($str, false);
         if(preg_match('/(号?以[上后下]|不含).*?\(/u', $str)) return array($str, false);
-        if(preg_match('/^\(.*\)$/u', $str)) return array($str, false);
+        if(preg_match('/^\(/u', $str)) return array($str, false);
         
         
         
@@ -290,6 +291,7 @@ if($this->debug) echo $tmp.' r5 <br>';
             return array($temp_f[0].implode('、', $temp1), '6');
         }*/
         #echo $str."<br>";
+
         if(preg_match('/[双单]号\(/u', $str)) return array($str, false);
         if(preg_match('/单号\d+.双号\d+.[\-至]单号\d+.双号\d+/u', $str)) return array($str, false);
         if(preg_match('/双号\d+.单号\d+.[\-至]双号\d+.单号\d+/u', $str)) return array($str, false);
@@ -317,7 +319,7 @@ if($this->debug) echo $tmp.' r5 <br>';
         }else{
             #单号3155、双号3050至单号3535、双号3550
             
-            
+           
             if($this->debug) echo $str." m4 <br>";
             //if(preg_match('/[()]/u', $str)) return false;
             //if(preg_match('/[^\d]\d{1,5}(号|栋)?(以上|以后|以下|([-到至]\d{1,5}(号|栋)?))?([双单][数号])?$/u', $str)){
@@ -331,16 +333,34 @@ if($this->debug) echo $tmp.' r5 <br>';
                 if(preg_match('/分部/u', $str)) return array($str, false);
                 if(preg_match('/[双单]号[^\d以、]/u', $str))
                     return array($str, false);
-                if(preg_match('/\d{5,}/', $str)) return array($str, false);
+               
+                
+                if(preg_match('/\d{5,}/u', $str)) return array($str, false);
                 #echo $str."<br>";
                 $tmp = preg_replace('/、?([双单][数号]\d?|\d+)(.*?$|$)/u','($1$2)', $str);
+                if(preg_match('/^\(/u', $tmp)) {
+                    
+                    return array($str, false);
+                }
                 if(mb_strlen(preg_match('/\(/u', $tmp))<2 && !preg_match('/[含除包]\d/u', $str) )return array($tmp, '_1');
                 else return array($str, false);
                     
                 #return array(preg_replace('/、?([双单][数号]\d?|\d+)([\-以、].*?$|$)/u','($1$2)', $str), '_1');
             }
-            
+             
         }
         return array($str, false);
     }
+}
+
+if(isset($argv) && count($argv)>1 && $argv[1] == 'test'){
+    $t = new matches();
+    $t1 = $t->matchstr("(1)");
+    var_dump($t1);
+    $f = fopen('./psfw', 'r');
+    $t = unserialize(stream_get_contents($f));
+    fclose($f);
+    foreach($t['211402'] as $v)
+        echo " $v[0], $v[1] \n";
+        
 }
